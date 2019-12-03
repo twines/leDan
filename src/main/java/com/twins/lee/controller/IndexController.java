@@ -26,6 +26,11 @@ public class IndexController {
         return Response.success("success");
     }
 
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "/dashboard/index";
+    }
+
     @GetMapping("/success/object")
     @ResponseBody
     public Map<String, Object> successObject() {
@@ -33,11 +38,12 @@ public class IndexController {
         map.put("a", 1111);
         return Response.success(map);
     }
+
     @GetMapping("/success/object/msg")
     @ResponseBody
     public Map<String, Object> successObjectMsg() {
         Map<String, Object> map = new HashMap<>();
         map.put("a", 1111);
-        return Response.success(map,"hhhhh");
+        return Response.success(map, "hhhhh");
     }
 }
