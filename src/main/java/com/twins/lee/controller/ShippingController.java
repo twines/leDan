@@ -27,4 +27,15 @@ public class ShippingController {
         company.getId();
         return map;
     }
+
+    @GetMapping("/list")
+    public String shippingList() {
+        return "/shipping/list";
+    }
+
+    public Map<String, Object> getShippingList() {
+        Map<String, Object> map = new HashMap<>();
+
+        return map;
+    }
 }

@@ -199,7 +199,7 @@
             }
             , done: function (res) {
                 //上传完毕
-                taxBill.push(res.data.url);
+                taxBill.push(res.data.value);
             }
         });
         upload.render({
@@ -214,7 +214,7 @@
             }
             , done: function (res) {
                 //上传完毕
-                entryBill.push(res.data.url);
+                entryBill.push(res.data.value);
             }
         });
         upload.render({
@@ -229,7 +229,7 @@
             }
             , done: function (res) {
                 //上传完毕
-                logisticsBill.push(res.data.url);
+                logisticsBill.push(res.data.value);
             }
         });
         upload.render({
@@ -244,7 +244,7 @@
             }
             , done: function (res) {
                 //上传完毕
-                insuranceBill.push(res.data.url);
+                insuranceBill.push(res.data.value);
             }
         });
         upload.render({
@@ -259,7 +259,7 @@
             }
             , done: function (res) {
                 //上传完毕
-                tradeBill.push(res.data.url);
+                tradeBill.push(res.data.value);
             }
         });
     });

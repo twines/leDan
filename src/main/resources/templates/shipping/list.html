@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org"
+       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <title>货贷记录</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/layuiadmin/style/admin.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <select name="status">
+                            <option value="0">全部</option>
+                            <option value="1">进行中</option>
+                            <option value="2">已完结</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">类型</label>
+                    <div class="layui-input-block">
+                        <select name="status">
+                            <option value="0">全部</option>
+                            <option value="1">货贷</option>
+                            <option value="2">税贷</option>
+                            <option value="2">汇贷</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">货贷编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="username" placeholder="请输入货贷编号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-user-front-search">
+                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                        查询
+                    </button>
+                </div>
+                <a lay-href="/pages/shipping/add.html" type="button" class="layui-btn">办理货贷</a>
+            </div>
+
+        </div>
+
+        <div class="layui-card-body">
+            <table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
+            <script type="text/html" id="imgTpl">
+            </script>
+            <script type="text/html" id="table-useradmin-webuser">
+                <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i
+                        class="layui-icon layui-icon-edit"></i>编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+                        class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script src="/layuiadmin/layui/layui.js"></script>
+<script th:inline="javascript">
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'useradmin', 'table'], function () {
+        var $ = layui.$
+            , form = layui.form
+            , table = layui.table;
+
+
+        //模板和layui的模板冲突了，外部引入js
+
+
+        //监听搜索
+        form.on('submit(LAY-user-front-search)', function (data) {
+            var field = data.field;
+
+            //执行重载
+            table.reload('LAY-user-manage', {
+                where: field
+            });
+        });
+    });
+</script>
+</body>
+</html>
