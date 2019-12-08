@@ -98,4 +98,4 @@ twins:
   #静态文件存储路径（最后带/ 访问路径 upload/xxx/xxx）
   #最后路径不带/  需要把最后文件夹添加 访问路径 upload/doc/xxx/xx
 #  uploadFolder: C:\web\springboot\
-  uploadFolder: /Users/sk
+  uploadFolder: /Users/liyulong/doc
