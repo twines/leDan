@@ -83,6 +83,6 @@ public class ShippingController {
         Map<String, Object> map = new HashMap<>();
         IPage<Shipping> shippingIPage = new Page<>(1, 15);
         IPage<Shipping> shippingIPageList = shippingMapper.selectPage(shippingIPage, new QueryWrapper<Shipping>());
-        return Response.success(shippingIPageList,"hhhhhhh");
+        return Response.success(shippingIPageList);
     }
 }
