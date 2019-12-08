@@ -82,7 +82,7 @@ public class ShippingController {
     public Map<String, Object> getShippingList() {
         Map<String, Object> map = new HashMap<>();
         IPage<Shipping> shippingIPage = new Page<>(1, 15);
-        IPage<Shipping> shippingIPageList = shippingMapper.selectPage(shippingIPage, new QueryWrapper<Shipping>());
+        IPage<Shipping> shippingIPageList = shippingMapper.selectPage(shippingIPage, new QueryWrapper<Shipping>().orderByDesc("id").eq("type", 1));
         return Response.success(shippingIPageList);
     }
 }
