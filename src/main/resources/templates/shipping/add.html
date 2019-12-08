@@ -168,7 +168,7 @@
             data.field.logisticsBill = logisticsBill;
             data.field.insuranceBill = insuranceBill;
             data.field.tradeBill = tradeBill;
-            parent.layer.alert(JSON.stringify(data.field), {
+            layer.alert(JSON.stringify(data.field), {
                 title: '最终的提交信息'
 
             });
@@ -177,10 +177,7 @@
                 url: '/shipping/add',
                 data: data.field,
                 success: function (res) {
-                    parent.layer.alert(res, {
-                        title: '结果'
-
-                    });
+                    layer.closeAll();
                 }
             });
             return false;
