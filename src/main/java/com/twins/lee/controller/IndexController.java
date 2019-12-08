@@ -1,9 +1,14 @@
 package com.twins.lee.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.twins.lee.entity.Shipping;
+import com.twins.lee.mapper.ShippingMapper;
 import com.twins.lee.response.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,20 +20,27 @@ import java.util.Map;
  **/
 @Controller
 public class IndexController {
+    @Autowired
+    private ShippingMapper shippingMapper;
+
     @GetMapping("/")
     public String index() {
         return "index/index";
+    }
+
+
+    @GetMapping("/dashboard")
+    public ModelAndView dashboard() {
+        ModelAndView modelAndView = new ModelAndView("/dashboard/index");
+        int shippingNumber = shippingMapper.selectCount(new QueryWrapper<Shipping>().eq("type", 1));
+        modelAndView.addObject("shippingNumber", shippingNumber);
+        return modelAndView;
     }
 
     @GetMapping("/success")
     @ResponseBody
     public Map<String, Object> success() {
         return Response.success("success");
-    }
-
-    @GetMapping("/dashboard")
-    public String dashboard() {
-        return "/dashboard/index";
     }
 
     @GetMapping("/success/object")

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
     <meta charset="utf-8">
     <title></title>
@@ -36,9 +37,9 @@
                                 </a>
                             </li>
                             <li class="layui-col-xs6">
-                                <a lay-href="app/forum/list.html" class="layadmin-backlog-body">
+                                <a lay-href="/shipping/list" class="layadmin-backlog-body">
                                     <h3>货贷</h3>
-                                    <p><cite>12</cite></p>
+                                    <p><cite th:text="${shippingNumber}"></cite></p>
                                 </a>
                             </li>
                             <li class="layui-col-xs6">
