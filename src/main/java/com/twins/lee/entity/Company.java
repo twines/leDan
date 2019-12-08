@@ -33,10 +33,6 @@ public class Company {
     @TableField("status")
     private int status;
 
-    public Company(Long userId) {
-        this.userId = userId;
-    }
-
     public Long getId() {
         return id;
     }
