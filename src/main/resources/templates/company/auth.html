@@ -182,19 +182,19 @@
             data.field.cardB = cardB;
             data.field.businessLicense = businessLicense;
             data.field.assetProof = assetProof;
-            parent.layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-
-            });
+            // parent.layer.alert(JSON.stringify(data.field), {
+            //     title: '最终的提交信息'
+            //
+            // });
             $.ajax({
                 method: 'post',
-                url: '/company/center/improv',
+                url: '/company/doAuth',
                 data: data.field,
                 success: function (res) {
-                    parent.layer.alert(res, {
-                        title: '结果'
-
-                    });
+                    // parent.layer.alert(res, {
+                    //     title: '结果'
+                    //
+                    // });
                 }
             });
             return false;
