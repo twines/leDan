@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org"
-       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
     <meta charset="utf-8">
     <title>货贷记录</title>
@@ -52,13 +52,13 @@
                         查询
                     </button>
                 </div>
-                <a lay-href="/pages/shipping/add.html" type="button" class="layui-btn">办理货贷</a>
+                <a lay-href="/shipping/add" type="button" class="layui-btn">办理货贷</a>
             </div>
 
         </div>
 
         <div class="layui-card-body">
-            <table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
+            <table id="shipping-list" lay-filter="shipping-list"></table>
             <script type="text/html" id="imgTpl">
             </script>
             <script type="text/html" id="table-useradmin-webuser">
@@ -77,7 +77,7 @@
         base: '/layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use(['index', 'useradmin', 'table'], function () {
+    }).use(['index', 'shippingList', 'table'], function () {
         var $ = layui.$
             , form = layui.form
             , table = layui.table;
@@ -91,7 +91,7 @@
             var field = data.field;
 
             //执行重载
-            table.reload('LAY-user-manage', {
+            table.reload('shipping-list', {
                 where: field
             });
         });

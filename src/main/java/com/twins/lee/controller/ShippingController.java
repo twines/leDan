@@ -2,6 +2,7 @@ package com.twins.lee.controller;
 
 import com.twins.lee.common.CompanyTool;
 import com.twins.lee.entity.Company;
+import com.twins.lee.response.Response;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,9 +34,11 @@ public class ShippingController {
         return "/shipping/list";
     }
 
+    @GetMapping("/list.json")
+    @ResponseBody
     public Map<String, Object> getShippingList() {
         Map<String, Object> map = new HashMap<>();
 
-        return map;
+        return Response.success(map);
     }
 }
