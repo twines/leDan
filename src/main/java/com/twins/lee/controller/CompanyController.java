@@ -32,7 +32,12 @@ public class CompanyController {
                                       String cardA,
                                       String cardB,
                                       String businessLicense,
-                                      @RequestParam(value = "assetProof[]") List<String> assetProof) {
+                                      @RequestParam(value = "assetProof[]") List<String> assetProofs) {
+        if (companyMapper.selectByUserId(CompanyTool.getCompany().getUserId()) != null) {
+            //已经完善信息
+            return Response.error("不能重复认证");
+        }
+
         Company company = CompanyTool.getCompany();
 
         company.setCreditCode(creditCode);
@@ -44,7 +49,7 @@ public class CompanyController {
         company.setCardB(cardB);
         company.setBusinessLicense(businessLicense);
 
-        company.setAssetProof(String.join(",", assetProof));
+        company.setAssetProof(String.join(",", assetProofs));
         company.setStatus(1);
 
         int result = companyMapper.insert(company);
