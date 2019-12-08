@@ -14,7 +14,7 @@
 <body>
 <div class="layui-fluid">
     <div class="layui-row">
-        <a lay-href="/company/auth" type="button" class="layui-btn">完善企业信息</a>
+        <a th:if="${company eq 0}" lay-href="/company/auth" type="button" class="layui-btn">完善企业信息</a>
         <a lay-href="/shipping/add" type="button" class="layui-btn">办理货贷</a>
         <a lay-href="/shipping/addCredit" type="button" class="layui-btn">办理汇贷</a>
         <a lay-href="/shipping/addTax" type="button" class="layui-btn">办理税贷</a>

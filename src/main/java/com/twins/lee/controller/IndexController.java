@@ -1,7 +1,10 @@
 package com.twins.lee.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.twins.lee.common.CompanyTool;
+import com.twins.lee.entity.Company;
 import com.twins.lee.entity.Shipping;
+import com.twins.lee.mapper.CompanyMapper;
 import com.twins.lee.mapper.ShippingMapper;
 import com.twins.lee.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import sun.rmi.runtime.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +26,8 @@ import java.util.Map;
 public class IndexController {
     @Autowired
     private ShippingMapper shippingMapper;
+    @Autowired
+    private CompanyMapper companyMapper;
 
     @GetMapping("/")
     public String index() {
@@ -32,8 +38,10 @@ public class IndexController {
     @GetMapping("/dashboard")
     public ModelAndView dashboard() {
         ModelAndView modelAndView = new ModelAndView("/dashboard/index");
+        int companyAuth = companyMapper.selectCount(new QueryWrapper<Company>().eq("user_id", CompanyTool.getCompany().getUserId()));
         int shippingNumber = shippingMapper.selectCount(new QueryWrapper<Shipping>().eq("type", 1));
         modelAndView.addObject("shippingNumber", shippingNumber);
+        modelAndView.addObject("company", companyAuth);
         return modelAndView;
     }
 

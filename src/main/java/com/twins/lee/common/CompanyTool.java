@@ -8,7 +8,7 @@ import com.twins.lee.entity.Company;
 public class CompanyTool {
     public static Company getCompany() {
         Company company = new Company();
-        company.setId(1l);
+        company.setId(1L);
         company.setUserId((long) 1001);
         return company;
     }
