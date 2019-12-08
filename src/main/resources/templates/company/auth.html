@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>完善企业信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="/src/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/src/style/admin.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/admin.css" media="all">
+    <link rel="stylesheet" href="../../layuiadmin/style/login.css" media="all">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">完善企业信息</div>
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">社会统一信用代码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="creditCode" lay-verify="required" autocomplete="off" placeholder="请输入标题"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">法人姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="userName" lay-verify="required" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">法人身份证号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="idNumber" lay-verify="required" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">企业银行卡号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="bankNumber" lay-verify="required" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">联系电话</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="mobile" lay-verify="required" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">身份证正面</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn" id="cardA">上传身份证正面</button>
+                            <a href="/images/a.jpg" target="_blank">身份证正面示例</a>
+
+                            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                                预览图：
+                                <div class="layui-upload-list" id="cardAImg"></div>
+                            </blockquote>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">身份证反面</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn" id="cardB">上传身份证反面</button>
+                            <a href="/images/a.jpg" target="_blank">身份证反面示例</a>
+                            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                                预览图：
+                                <div class="layui-upload-list" id="cardBImg"></div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">营业执照</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn" id="businessLicense">上传营业执照</button>
+                            <a href="/images/a.jpg" target="_blank">营业执照示例</a>
+                            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                                预览图：
+                                <div class="layui-upload-list" id="businessLicenseImages"></div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-card-header">完善企业资产证明</div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">企业资产证明</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload">
+                            <button type="button" class="layui-btn" id="proof">上传企业资产证明</button>
+                            <a href="/images/a.jpg" target="_blank">企业资产证明示例</a>
+                            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                                预览图：
+                                <div class="layui-upload-list" id="proofImg"></div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item ">
+                    <div class="layui-input-block">
+                        <div class="layui-footer" style="left: 0;">
+                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="/src/layui/layui.js"></script>
+<script src="/layuiadmin/layui/layui.js"></script>
+
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'upload', 'form', 'laydate'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , upload = layui.upload
+            , form = layui.form;
+
+        form.render(null, 'component-form-group');
+
+        laydate.render({
+            elem: '#LAY-component-form-group-date'
+        });
+
+        /* 自定义验证规则 */
+        form.verify({
+            title: function (value) {
+                if (value.length < 5) {
+                    return '标题至少得5个字符啊';
+                }
+            }
+            , pass: [/(.+){6,12}$/, '密码必须6到12位']
+            , content: function (value) {
+                layedit.sync(editIndex);
+            }
+        });
+        var cardA, cardB, businessLicense, assetProof = [];
+
+        /* 监听指定开关 */
+        form.on('switch(component-form-switchTest)', function (data) {
+            layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
+                offset: '6px'
+            });
+            layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+        });
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            data.field.cardA = cardA;
+            data.field.cardB = cardB;
+            data.field.businessLicense = businessLicense;
+            data.field.assetProof = assetProof;
+            parent.layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+
+            });
+            $.ajax({
+                method: 'post',
+                url: '/company/center/improv',
+                data: data.field,
+                success: function (res) {
+                    parent.layer.alert(res, {
+                        title: '结果'
+
+                    });
+                }
+            });
+            return false;
+        });
+
+        upload.render({
+            elem: '#cardA'
+            , url: '/file/upload'
+            , multiple: true
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#cardAImg').html('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
+                });
+            }
+            , done: function (res) {
+                //上传完毕
+                cardA = res.data.url;
+            }
+        });
+        upload.render({
+            elem: '#cardB'
+            , url: '/file/upload'
+            , multiple: true
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#cardBImg').html('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
+                });
+            }
+            , done: function (res) {
+                //上传完毕
+                cardB = res.data.url;
+            }
+        });
+        upload.render({
+            elem: '#businessLicense'
+            , url: '/file/upload'
+            , multiple: true
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#businessLicenseImages').html('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
+                });
+            }
+            , done: function (res) {
+                //上传完毕
+                businessLicense = res.data.url;
+            }
+        });
+        upload.render({
+            elem: '#proof'
+            , url: '/file/upload'
+            , multiple: true
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#proofImg').append('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
+                });
+            }
+            , done: function (res) {
+                //上传完毕
+                assetProof.push(res.data.url);
+            }
+        });
+    });
+</script>
+</body>
+</html>
