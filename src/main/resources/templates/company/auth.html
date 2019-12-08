@@ -186,6 +186,8 @@
             //     title: '最终的提交信息'
             //
             // });
+
+            console.log(data.field);
             $.ajax({
                 method: 'post',
                 url: '/company/doAuth',
@@ -212,7 +214,7 @@
             }
             , done: function (res) {
                 //上传完毕
-                cardA = res.data.url;
+                cardA = res.data.value;
             }
         });
         upload.render({
@@ -227,7 +229,7 @@
             }
             , done: function (res) {
                 //上传完毕
-                cardB = res.data.url;
+                cardB = res.data.value;
             }
         });
         upload.render({
@@ -242,7 +244,7 @@
             }
             , done: function (res) {
                 //上传完毕
-                businessLicense = res.data.url;
+                businessLicense = res.data.value;
             }
         });
         upload.render({
@@ -257,7 +259,7 @@
             }
             , done: function (res) {
                 //上传完毕
-                assetProof.push(res.data.url);
+                assetProof.push(res.data.value);
             }
         });
     });

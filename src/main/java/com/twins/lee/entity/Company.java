@@ -33,6 +33,7 @@ public class Company {
     @TableField("status")
     private int status;
 
+
     public Long getId() {
         return id;
     }
