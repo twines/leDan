@@ -1,5 +1,8 @@
 package com.twins.lee.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.twins.lee.common.CompanyTool;
 import com.twins.lee.entity.Company;
 import com.twins.lee.entity.Shipping;
@@ -61,10 +64,10 @@ public class ShippingController {
             result = shippingImageMapper.insert(shippingImage);
             if (result > 0) {
                 return Response.success(shippingImage);
-            }else{
+            } else {
                 return Response.error("货贷申请异常");
             }
-        }else{
+        } else {
             return Response.error("货贷申请异常");
         }
     }
@@ -78,7 +81,8 @@ public class ShippingController {
     @ResponseBody
     public Map<String, Object> getShippingList() {
         Map<String, Object> map = new HashMap<>();
-
-        return Response.success(map);
+        IPage<Shipping> shippingIPage = new Page<>(1, 15);
+        IPage<Shipping> shippingIPageList = shippingMapper.selectPage(shippingIPage, new QueryWrapper<Shipping>());
+        return Response.success(shippingIPageList,"hhhhhhh");
     }
 }

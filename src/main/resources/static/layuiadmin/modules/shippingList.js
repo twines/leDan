@@ -8,11 +8,19 @@ layui.define(['table', 'form'], function (exports) {
         elem: '#shipping-list'
         , url: '/shipping/list.json' //模拟接口
         , cols: [[
-            {field: 'id', width: 100, title: 'ID', sort: true}
-            , {field: '公司名称', title: '用户名', minWidth: 100}
-            , {field: '时间', title: '时间', width: 100, templet: '#imgTpl'}
+            {field: 'id', width: 100, title: 'ID'}
+            , {field: '公司名称', title: '用户名'}
+            , {field: '时间', title: '时间'}
             , {field: '状态', title: '状态'}
         ]]
+        , parseData: function (res) { //res 即为原始返回的数据
+            return {
+                "code": 1, //解析接口状态
+                "msg": res.msg, //解析提示文本
+                "count": res.data.total, //解析数据长度
+                "data": res.data.records //解析数据列表
+            };
+        }
         , page: true
         , limit: 30
         , height: 'full-220'
