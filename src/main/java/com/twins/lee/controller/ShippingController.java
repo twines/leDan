@@ -41,7 +41,7 @@ public class ShippingController {
                 return "redirect:/";
             }
         }
-        return "/shipping/add";
+        return "shipping/add";
     }
 
     @PostMapping("/add")
