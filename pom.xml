@@ -153,6 +153,7 @@
                 <includes>
                     <include>templates/**</include>
                     <include>static/**</include>
+                    <include>mapping/**</include>
                 </includes>
             </resource>
             <resource>
