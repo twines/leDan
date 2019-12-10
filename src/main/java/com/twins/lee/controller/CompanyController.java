@@ -27,7 +27,7 @@ public class CompanyController {
                 return "redirect:/";
             }
         }
-        return "/company/auth";
+        return "company/auth";
     }
 
     @PostMapping("/doAuth")

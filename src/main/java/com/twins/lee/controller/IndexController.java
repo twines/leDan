@@ -36,7 +36,7 @@ public class IndexController {
 
     @GetMapping("/dashboard")
     public ModelAndView dashboard() {
-        ModelAndView modelAndView = new ModelAndView("/dashboard/index");
+        ModelAndView modelAndView = new ModelAndView("dashboard/index");
         int companyAuth = companyMapper.selectCount(new QueryWrapper<Company>().eq("user_id", CompanyTool.getCompany().getUserId()));
         int shippingNumber = shippingMapper.selectCount(new QueryWrapper<Shipping>().eq("type", 1));
         modelAndView.addObject("shippingNumber", shippingNumber);
