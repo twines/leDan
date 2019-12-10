@@ -7,9 +7,11 @@ import com.twins.lee.common.CompanyTool;
 import com.twins.lee.entity.Company;
 import com.twins.lee.entity.Shipping;
 import com.twins.lee.entity.ShippingImage;
+import com.twins.lee.mapper.CompanyMapper;
 import com.twins.lee.mapper.ShippingImageMapper;
 import com.twins.lee.mapper.ShippingMapper;
 import com.twins.lee.response.Response;
+import com.twins.lee.utilites.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,9 @@ import java.util.Map;
 @RequestMapping("/shipping")
 public class ShippingController {
     @Autowired
+    CompanyMapper companyMapper;
+
+    @Autowired
     ShippingMapper shippingMapper;
 
     @Autowired
@@ -29,6 +34,13 @@ public class ShippingController {
 
     @GetMapping("add")
     public String index() {
+        Company company = companyMapper.selectByUserId(Utility.userId());
+        if ( company != null) {
+            //不能重复完善信息
+            if (company.getStatus() == 0) {
+                return "redirect:/";
+            }
+        }
         return "/shipping/add";
     }
 

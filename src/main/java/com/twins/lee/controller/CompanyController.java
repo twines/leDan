@@ -4,6 +4,7 @@ import com.twins.lee.common.CompanyTool;
 import com.twins.lee.entity.Company;
 import com.twins.lee.mapper.CompanyMapper;
 import com.twins.lee.response.Response;
+import com.twins.lee.utilites.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,13 @@ public class CompanyController {
 
     @GetMapping("/auth")
     public String auth() {
+        Company company = companyMapper.selectByUserId(Utility.userId());
+        if ( company != null) {
+            //不能重复完善信息
+            if (company.getStatus() == 0) {
+                return "redirect:/";
+            }
+        }
         return "/company/auth";
     }
 

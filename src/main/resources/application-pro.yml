@@ -15,9 +15,15 @@ spring:
         min-idle: 1
         max-active: 1000
 twins:
-  cas-server-url-prefix:  http://login.ldforms.com:88/cas
-  cas-login-url: http://login.ldforms.com:88/cas/login
-  cas-logout-url: http://login.ldforms.com:88/cas/logout
-  shiro-server-url-prefix: http://localhost:8080
+  cas-server-url-prefix:  http://testld.ldforms.com:88/cas
+  cas-login-url: http://testld.ldforms.com:88/cas/login
+  cas-logout-url: http://testld.ldforms.com:88/cas/logout
+  shiro-server-url-prefix: http://www.xiangshike.com:8080
   case-filter-url-patter: /cas
-  login-url:  http://login.ldforms.com:88/cas/login?service=http://localhost:8080/cas
+  login-url:  http://testld.ldforms.com:88/cas/login?service=http://www.xiangshike.com:8080/cas
+  #静态资源对外暴露的访问路径
+  staticAccessPath: /upload/**
+  #静态文件存储路径（最后带/ 访问路径 upload/xxx/xxx）
+  #最后路径不带/  需要把最后文件夹添加 访问路径 upload/doc/xxx/xx
+  #  uploadFolder: C:\web\springboot\
+  uploadFolder: /home/proj/resources
