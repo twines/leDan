@@ -1,6 +1,6 @@
 environment: pro
 server:
-  port: 80
+  port: 8080
 spring:
   datasource:
     username: root
