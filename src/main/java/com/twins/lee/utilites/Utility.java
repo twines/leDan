@@ -1,5 +1,8 @@
 package com.twins.lee.utilites;
 
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.shiro.SecurityUtils;
@@ -72,5 +75,29 @@ public class Utility {
         return list;
     }
 
+
+    /**
+     * OCR 通过文件绝对地址和OCR库在Resources资源中的绝对地址识别出问题
+     *
+     * @param destPath 图片本地地址
+     * @param tranPath OCR训练资源库地址
+     * @return 返回OCR识别的文本
+     */
+    public String ocrReco(String destPath, String tranPath) {
+
+        File imageFile = new File(destPath);
+        ITesseract instance = new Tesseract();
+        instance.setDatapath(tranPath);
+        instance.setLanguage("chi_sim");
+//        instance.setLanguage("eng");
+
+        try {
+            String result = instance.doOCR(imageFile).replace(" ", "");
+
+            return result;
+        } catch (TesseractException e) {
+            return null;
+        }
+    }
 
 }

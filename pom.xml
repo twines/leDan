@@ -108,7 +108,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>net.sourceforge.tess4j</groupId>
+            <artifactId>tess4j</artifactId>
+            <version>3.2.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 
@@ -169,6 +174,14 @@
                 <filtering>false</filtering>
                 <includes>
                     <include>mapping/**</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>*.dylib</include>
+                    <include>*.traineddata</include>
                 </includes>
             </resource>
         </resources>

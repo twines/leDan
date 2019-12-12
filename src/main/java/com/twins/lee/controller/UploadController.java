@@ -1,6 +1,9 @@
 package com.twins.lee.controller;
 
 import com.twins.lee.response.Response;
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
@@ -65,7 +68,11 @@ public class UploadController {
 
             file.transferTo(dest);
             Map result = null;
+            Map extract = null;
             if (needOcr && needQr == false) {
+                extract = new HashMap();
+                extract.put("ocrResult", ocrReco(fileUrl));
+
 //                result = new UploadResult(fileUrl, ocrReco(fileUrl), null);
             } else if (needQr && needOcr == false) {
 //                result = new UploadResult(fileUrl, null, qrReco(fileUrl));
@@ -80,6 +87,9 @@ public class UploadController {
             }
             Map value = new HashMap();
             value.put("value", fileUrl);
+            if (extract != null) {
+                value.put("extract", extract);
+            }
             return result = Response.success(value);
         } catch (Exception e) {
             return Response.error("系统错误:" + e.getLocalizedMessage());
@@ -106,27 +116,27 @@ public class UploadController {
 //        return resultStr;
 //    }
 //
-//    private String ocrReco(String imgPath) {
-//        String sysPath = fileDestPath();
-//        String tranPath = sysPath;
-//        String destPath = sysPath + "/static" + imgPath;
-//        if (docLocation != null) {
-//            destPath = docLocation + imgPath;
-//        }
-//        File imageFile = new File(destPath);
-//        ITesseract instance = new Tesseract();
-//        instance.setDatapath(tranPath);
-//        instance.setLanguage("chi_sim");
-////        instance.setLanguage("eng");
-//
-//        try {
-//            String result = instance.doOCR(imageFile).replace(" ", "");
-//
-//            return result;
-//        } catch (TesseractException e) {
-//            return null;
-//        }
-//    }
+    private String ocrReco(String imgPath) {
+        String sysPath = fileDestPath();
+        String tranPath = sysPath;
+        String destPath = sysPath + "/static" + imgPath;
+        if (docLocation != null) {
+            destPath = docLocation + imgPath;
+        }
+        File imageFile = new File(destPath);
+        ITesseract instance = new Tesseract();
+        instance.setDatapath(tranPath);
+        instance.setLanguage("chi_sim");
+//        instance.setLanguage("eng");
+
+        try {
+            String result = instance.doOCR(imageFile).replace(" ", "");
+
+            return result;
+        } catch (TesseractException e) {
+            return null;
+        }
+    }
 
     private String fileDestPath() {
         String filePath = null;
