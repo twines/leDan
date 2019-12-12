@@ -41,7 +41,7 @@ public class ShippingController {
                 return "redirect:/";
             }
         }
-        return "/shipping/add";
+        return "shipping/add";
     }
 
     @PostMapping("/add")
@@ -86,7 +86,7 @@ public class ShippingController {
 
     @GetMapping("/list")
     public String shippingList() {
-        return "/shipping/list";
+        return "shipping/list";
     }
 
     @GetMapping("/list.json")
