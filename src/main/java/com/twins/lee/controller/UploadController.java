@@ -1,9 +1,12 @@
 package com.twins.lee.controller;
 
+import com.twins.lee.entity.Resource;
+import com.twins.lee.mapper.ResourceMapper;
 import com.twins.lee.response.Response;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
@@ -24,7 +27,8 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/file")
 public class UploadController {
-
+    @Autowired
+    ResourceMapper resourceMapper;
 
     @Value("${twins.uploadFolder}")
     private String docLocation;
@@ -67,11 +71,16 @@ public class UploadController {
             }
 
             file.transferTo(dest);
+
+            Resource resource = new Resource();
             Map result = null;
             Map extract = null;
             if (needOcr && needQr == false) {
                 extract = new HashMap();
-                extract.put("ocrResult", ocrReco(fileUrl));
+                String ocrResult = ocrReco(fileUrl);
+                resource.setOcr(ocrResult);
+
+                extract.put("ocrResult", ocrResult);
 
 //                result = new UploadResult(fileUrl, ocrReco(fileUrl), null);
             } else if (needQr && needOcr == false) {
@@ -86,7 +95,12 @@ public class UploadController {
 //                result = Response.success(value);
             }
             Map value = new HashMap();
-            value.put("value", fileUrl);
+            resource.setUrl(fileUrl);
+
+             resourceMapper.insert(resource);
+
+            value.put("value", resource.getResourceUri());
+
             if (extract != null) {
                 value.put("extract", extract);
             }
@@ -96,7 +110,7 @@ public class UploadController {
         }
     }
 
-//    protected String qrReco(String imgPath) throws IOException, NotFoundException {
+    //    protected String qrReco(String imgPath) throws IOException, NotFoundException {
 //        String destPath = docLocation + imgPath;
 //
 //        BufferedImage image;
