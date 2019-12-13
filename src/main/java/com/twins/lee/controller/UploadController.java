@@ -133,6 +133,8 @@ public class UploadController {
 //    }
 //
     private Object regexOcrResult(int type, String ocrSource) {
+        Map result = new HashMap();
+        result.put("ocrValue", ocrSource);
 
         switch (type) {
             case CompanyTool.OcrTypeOfCardA: {
@@ -150,9 +152,32 @@ public class UploadController {
                     idValue = idMatcher.group();
                 }
 
-                Map result = new HashMap();
                 result.put("name", nameValue);
                 result.put("id", idValue);
+                return result;
+            }
+            case CompanyTool.OcrTypeOfLicense: {
+                //社会统一信用代码
+                String license = null;
+                //法人代表
+                String representativeName = null;
+                Pattern licensePattern = Pattern.compile("统一社会信用代码+[0-9a-zA-Z]+");
+                Matcher licenseMatcher = licensePattern.matcher(ocrSource);
+
+                Pattern representativePattern = Pattern.compile("法定代表人[^\\x00-\\xff]{2,4}");
+                Matcher representativeMatcher = representativePattern.matcher(ocrSource);
+
+                if (licenseMatcher.find()) {
+                    license = licenseMatcher.group();
+                    license = license.replace("统一社会信用代码", "");
+                }
+                if (representativeMatcher.find()) {
+                    representativeName = representativeMatcher.group();
+                    representativeName = representativeName.replace("法定代表人", "");
+                }
+                result.put("license", license);
+                result.put("representativeName", representativeName);
+
                 return result;
             }
         }

@@ -17,4 +17,5 @@ public class CompanyTool {
     public static final int LoanOfShipping = 1;//货贷
 
     public static final int OcrTypeOfCardA = 1;//身份证识别
+    public static final int OcrTypeOfLicense = 2;//营业执照
 }
