@@ -1,5 +1,6 @@
 package com.twins.lee.controller;
 
+import com.twins.lee.common.CompanyTool;
 import com.twins.lee.entity.Resource;
 import com.twins.lee.mapper.ResourceMapper;
 import com.twins.lee.response.Response;
@@ -21,6 +22,8 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 //@SessionAttributes(value={"CURR_USER"},types={User.class})
@@ -33,21 +36,20 @@ public class UploadController {
     @Value("${twins.uploadFolder}")
     private String docLocation;
 
+
     @RequestMapping("/upload")
     @ResponseBody
     public Map upload(@RequestParam("file") MultipartFile file, HttpSession session,
                       @RequestParam(value = "needOCR", required = false, defaultValue = "false") boolean needOcr,
-                      @RequestParam(value = "needQr", required = false, defaultValue = "false") boolean needQr) {
+                      @RequestParam(value = "type", required = false, defaultValue = "0") int type) {
 
         String plantform = System.getProperty("os.name");
         if (plantform.toLowerCase().contains("windows")) {
             // 是windows 不走ocr 直接返回个结果数据
-        }else{
+        } else {
             // 不是windows 走ocr返回个结果数据
 
         }
-
-
 
 
         String sessionId = session.getId();
@@ -86,29 +88,18 @@ public class UploadController {
             Resource resource = new Resource();
             Map result = null;
             Map extract = null;
-            if (needOcr && needQr == false) {
+            if (needOcr && type > 0) {
                 extract = new HashMap();
                 String ocrResult = ocrReco(fileUrl);
                 resource.setOcr(ocrResult);
+                extract.put("type", type);
+                extract.put("ocrResult", regexOcrResult(type, ocrResult));
 
-                extract.put("ocrResult", ocrResult);
-
-//                result = new UploadResult(fileUrl, ocrReco(fileUrl), null);
-            } else if (needQr && needOcr == false) {
-//                result = new UploadResult(fileUrl, null, qrReco(fileUrl));
-            } else if (needQr && needOcr) {
-//                String ocr = ocrReco(fileUrl);
-//                String qr = qrReco(fileUrl);
-//                result = new UploadResult(fileUrl, ocr, qr);
-            } else {
-//                Map value = new HashMap();
-//                value.put("value", fileUrl);
-//                result = Response.success(value);
             }
             Map value = new HashMap();
             resource.setUrl(fileUrl);
 
-             resourceMapper.insert(resource);
+            resourceMapper.insert(resource);
 
             value.put("value", resource.getResourceUri());
 
@@ -141,6 +132,33 @@ public class UploadController {
 //        return resultStr;
 //    }
 //
+    private Object regexOcrResult(int type, String ocrSource) {
+
+        switch (type) {
+            case CompanyTool.OcrTypeOfCardA: {
+                String nameValue = null;
+                String idValue = null;
+                Pattern namePattern = Pattern.compile("名[^\\\\x00-\\\\xff]{2,3}");
+                Matcher nameMatcher = namePattern.matcher(ocrSource);
+                if (nameMatcher.find()) {
+                    nameValue = nameMatcher.group();
+                    nameValue = nameValue.replace("名", "");
+                }
+                Pattern idPattern = Pattern.compile("\\d{17}[\\d|x]|\\d{15}");
+                Matcher idMatcher = idPattern.matcher(ocrSource);
+                if (idMatcher.find()) {
+                    idValue = idMatcher.group();
+                }
+
+                Map result = new HashMap();
+                result.put("name", nameValue);
+                result.put("id", idValue);
+                return result;
+            }
+        }
+        return null;
+    }
+
     private String ocrReco(String imgPath) {
         String sysPath = fileDestPath();
         String tranPath = sysPath;
