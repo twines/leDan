@@ -39,6 +39,17 @@ public class UploadController {
                       @RequestParam(value = "needOCR", required = false, defaultValue = "false") boolean needOcr,
                       @RequestParam(value = "needQr", required = false, defaultValue = "false") boolean needQr) {
 
+        String plantform = System.getProperty("os.name");
+        if (plantform.toLowerCase().contains("windows")) {
+            // 是windows 不走ocr 直接返回个结果数据
+        }else{
+            // 不是windows 走ocr返回个结果数据
+
+        }
+
+
+
+
         String sessionId = session.getId();
 
         // 获取文件名
