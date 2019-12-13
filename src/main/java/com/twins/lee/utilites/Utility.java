@@ -75,6 +75,16 @@ public class Utility {
         return list;
     }
 
+    public static boolean isWindows() {
+        String plantform = System.getProperty("os.name");
+        if (plantform.toLowerCase().contains("windows")) {
+            // 是windows 不走ocr 直接返回个结果数据
+            return true;
+        } else {
+            // 不是windows 走ocr返回个结果数据
+            return false;
+        }
+    }
 
     /**
      * OCR 通过文件绝对地址和OCR库在Resources资源中的绝对地址识别出问题

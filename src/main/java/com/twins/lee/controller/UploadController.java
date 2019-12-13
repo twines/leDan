@@ -4,6 +4,7 @@ import com.twins.lee.common.CompanyTool;
 import com.twins.lee.entity.Resource;
 import com.twins.lee.mapper.ResourceMapper;
 import com.twins.lee.response.Response;
+import com.twins.lee.utilites.Utility;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
@@ -42,15 +43,6 @@ public class UploadController {
     public Map upload(@RequestParam("file") MultipartFile file, HttpSession session,
                       @RequestParam(value = "needOCR", required = false, defaultValue = "false") boolean needOcr,
                       @RequestParam(value = "type", required = false, defaultValue = "0") int type) {
-
-        String plantform = System.getProperty("os.name");
-        if (plantform.toLowerCase().contains("windows")) {
-            // 是windows 不走ocr 直接返回个结果数据
-        } else {
-            // 不是windows 走ocr返回个结果数据
-
-        }
-
 
         String sessionId = session.getId();
 
@@ -138,45 +130,56 @@ public class UploadController {
 
         switch (type) {
             case CompanyTool.OcrTypeOfCardA: {
-                String nameValue = null;
-                String idValue = null;
-                Pattern namePattern = Pattern.compile("名[^\\\\x00-\\\\xff]{2,3}");
-                Matcher nameMatcher = namePattern.matcher(ocrSource);
-                if (nameMatcher.find()) {
-                    nameValue = nameMatcher.group();
-                    nameValue = nameValue.replace("名", "");
-                }
-                Pattern idPattern = Pattern.compile("\\d{17}[\\d|x]|\\d{15}");
-                Matcher idMatcher = idPattern.matcher(ocrSource);
-                if (idMatcher.find()) {
-                    idValue = idMatcher.group();
+                if (!Utility.isWindows()) {
+                    String nameValue = null;
+                    String idValue = null;
+                    Pattern namePattern = Pattern.compile("名[^\\\\x00-\\\\xff]{2,3}");
+                    Matcher nameMatcher = namePattern.matcher(ocrSource);
+                    if (nameMatcher.find()) {
+                        nameValue = nameMatcher.group();
+                        nameValue = nameValue.replace("名", "");
+                    }
+                    Pattern idPattern = Pattern.compile("\\d{17}[\\d|x]|\\d{15}");
+                    Matcher idMatcher = idPattern.matcher(ocrSource);
+                    if (idMatcher.find()) {
+                        idValue = idMatcher.group();
+                    }
+
+                    result.put("name", nameValue);
+                    result.put("id", idValue);
+                } else {
+                    result.put("name", "韦小宝");
+                    result.put("id", "410426198903180531");
                 }
 
-                result.put("name", nameValue);
-                result.put("id", idValue);
                 return result;
             }
             case CompanyTool.OcrTypeOfLicense: {
-                //社会统一信用代码
-                String license = null;
-                //法人代表
-                String representativeName = null;
-                Pattern licensePattern = Pattern.compile("统一社会信用代码+[0-9a-zA-Z]+");
-                Matcher licenseMatcher = licensePattern.matcher(ocrSource);
+                if (!Utility.isWindows()) {
+                    result.put("license", "10000233232323");
+                    result.put("representativeName", "韦小宝");
+                } else {
+                    //社会统一信用代码
+                    String license = null;
+                    //法人代表
+                    String representativeName = null;
+                    Pattern licensePattern = Pattern.compile("统一社会信用代码+[0-9a-zA-Z]+");
+                    Matcher licenseMatcher = licensePattern.matcher(ocrSource);
 
-                Pattern representativePattern = Pattern.compile("法定代表人[^\\x00-\\xff]{2,4}");
-                Matcher representativeMatcher = representativePattern.matcher(ocrSource);
+                    Pattern representativePattern = Pattern.compile("法定代表人[^\\x00-\\xff]{2,4}");
+                    Matcher representativeMatcher = representativePattern.matcher(ocrSource);
 
-                if (licenseMatcher.find()) {
-                    license = licenseMatcher.group();
-                    license = license.replace("统一社会信用代码", "");
+                    if (licenseMatcher.find()) {
+                        license = licenseMatcher.group();
+                        license = license.replace("统一社会信用代码", "");
+                    }
+                    if (representativeMatcher.find()) {
+                        representativeName = representativeMatcher.group();
+                        representativeName = representativeName.replace("法定代表人", "");
+                    }
+                    result.put("license", license);
+                    result.put("representativeName", representativeName);
                 }
-                if (representativeMatcher.find()) {
-                    representativeName = representativeMatcher.group();
-                    representativeName = representativeName.replace("法定代表人", "");
-                }
-                result.put("license", license);
-                result.put("representativeName", representativeName);
 
                 return result;
             }
