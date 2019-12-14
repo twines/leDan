@@ -56,6 +56,18 @@ public class ShippingController {
         Shipping shipping = new Shipping();
         shipping.setUserId(company.getUserId());
         shipping.setType(CompanyTool.LoanOfShipping);
+        if (taxBill.isEmpty()) {
+            return Response.error("请添加税单");
+        }
+        if (entryBill.isEmpty()) {
+            return Response.error("请添加报关单");
+        }
+        if (logisticsBill.isEmpty()) {
+            return Response.error("请添加物流单");
+        }
+        if (tradeBill.isEmpty()) {
+            return Response.error("请添加贸易合同");
+        }
 
         int result = shippingMapper.insert(shipping);
         if (result > 0) {//先创建一个货代id，然后插入数据
