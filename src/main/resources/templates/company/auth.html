@@ -276,12 +276,12 @@
             , done: function (res) {
                 //上传完毕
                 businessLicense = res.data.value;
-                var license = res.data.extract.ocrResult.license
+                var license = res.data.extract.ocrResult.license;
                 var representativeName = res.data.extract.ocrResult.representativeName;
                 if (representativeName != $('#userName').val()) {
                     layer.alert('身份证姓名和法人姓名不一致');
                 }
-                $('#creditCode').removeAttribute('disabled');
+                $('#creditCode').removeAttr('disabled');
                 $('#creditCode').val(license);
             }
         });
