@@ -22,15 +22,16 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">社会统一信用代码</label>
                     <div class="layui-input-block">
-                        <input type="text" name="creditCode" lay-verify="required" autocomplete="off"
-                               placeholder="请输入标题"
+                        <input type="text" name="creditCode" id="creditCode" lay-verify="required" autocomplete="off"
+                               placeholder="上传识别后可以手动编辑"
+                               disabled
                                class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">法人姓名</label>
                     <div class="layui-input-block">
-                        <input type="text" name="userName" id="userName" lay-verify="required" placeholder="请输入"
+                        <input type="text" name="userName" id="userName" lay-verify="required" placeholder="上传识别后可以手动编辑"
                                disabled
                                autocomplete="off"
                                class="layui-input">
@@ -40,7 +41,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">法人身份证号</label>
                     <div class="layui-input-block">
-                        <input type="text" name="idNumber" id="idNumber" lay-verify="required" placeholder="请输入"
+                        <input type="text" name="idNumber" id="idNumber" lay-verify="required" placeholder="上传识别后可以手动编辑"
                                disabled
                                autocomplete="off"
                                class="layui-input">
@@ -264,7 +265,7 @@
         });
         upload.render({
             elem: '#businessLicense'
-            , url: '/file/upload'
+            , url: '/file/upload?needOCR=true&type=2'
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
@@ -275,6 +276,13 @@
             , done: function (res) {
                 //上传完毕
                 businessLicense = res.data.value;
+                var license = res.data.extract.ocrResult.license
+                var representativeName = res.data.extract.ocrResult.representativeName;
+                if (representativeName != $('#userName').val()) {
+                    layer.alert('身份证姓名和法人姓名不一致');
+                }
+                $('#creditCode').removeAttribute('disabled');
+                $('#creditCode').val(license);
             }
         });
         upload.render({
