@@ -200,7 +200,7 @@ public class UploadController {
                 return result;
             }
             case CompanyTool.OcrTypeOfLicense: {
-                if (!Utility.isWindows()) {
+                if (Utility.isWindows()) {
                     result.put("license", "10000233232323");
                     result.put("representativeName", "韦小宝");
                 } else {
