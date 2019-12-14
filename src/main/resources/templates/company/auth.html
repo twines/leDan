@@ -22,14 +22,16 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">社会统一信用代码</label>
                     <div class="layui-input-block">
-                        <input type="text" name="creditCode" lay-verify="required" autocomplete="off" placeholder="请输入标题"
+                        <input type="text" name="creditCode" lay-verify="required" autocomplete="off"
+                               placeholder="请输入标题"
                                class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">法人姓名</label>
                     <div class="layui-input-block">
-                        <input type="text" name="userName" lay-verify="required" placeholder="请输入" autocomplete="off"
+                        <input type="text" name="userName" id="userName" lay-verify="required" placeholder="请输入"
+                               autocomplete="off"
                                class="layui-input">
                     </div>
                 </div>
@@ -37,7 +39,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">法人身份证号</label>
                     <div class="layui-input-block">
-                        <input type="text" name="idNumber" lay-verify="required" placeholder="请输入" autocomplete="off"
+                        <input type="text" name="idNumber" id="idNumber" lay-verify="required" placeholder="请输入"
+                               autocomplete="off"
                                class="layui-input">
                     </div>
                 </div>
@@ -197,6 +200,15 @@
                     //     title: '结果'
                     //
                     // });
+                    if (res.code == 1) {
+                        layer.alert(res.msg);
+                    } else {
+                        layer.msg('提交成功');
+                    }
+
+                    setTimeout(function () {
+                        parent.layui.admin.events.closeThisTabs();
+                    }, 3000)
                 }
             });
             return false;
@@ -214,7 +226,22 @@
             }
             , done: function (res) {
                 //上传完毕
+
+
                 cardA = res.data.value;
+                if (res.code == 1) {
+                    layer.alert('请上传正确的身份证照片')
+                    return;
+                }
+                //识别错误怎么判断
+                var idNumber = $('#idNumber').val();
+                var userName = $('#userName').val();
+                if (res.data.extract.ocrResult.name != userName) {
+                    layer.alert('法人姓名不匹配');
+                }
+                if (res.data.extract.ocrResult.id != idNumber) {
+                    layer.alert('法人身份证号不匹配');
+                }
             }
         });
         upload.render({
