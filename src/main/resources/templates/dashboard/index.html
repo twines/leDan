@@ -72,7 +72,9 @@
     }).extend({
         index: 'lib/index' //主入口模块
     }).use(['index', 'console'], function () {
-
+        window.onfocus = function () {
+            parent.layui.admin.events.refresh();
+        }
     });
 
 

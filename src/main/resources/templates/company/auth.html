@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
 <head>
     <meta charset="utf-8">
     <title>完善企业信息</title>
@@ -159,6 +161,16 @@
         laydate.render({
             elem: '#LAY-component-form-group-date'
         });
+
+
+        var companyAuth = [[${companyAuth}]];
+        if (companyAuth) {
+            layer.msg('已经提交实名认证,请勿重复操作');
+            setTimeout(function () {
+                parent.layui.admin.events.closeThisTabs();
+            }, 2000)
+        }
+
 
         /* 自定义验证规则 */
         form.verify({

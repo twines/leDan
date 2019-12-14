@@ -8,6 +8,7 @@ import com.twins.lee.utilites.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
@@ -19,15 +20,11 @@ public class CompanyController {
     CompanyMapper companyMapper;
 
     @GetMapping("/auth")
-    public String auth() {
+    public ModelAndView auth() {
+        ModelAndView modelAndView = new ModelAndView("company/auth");
         Company company = companyMapper.selectByUserId(Utility.userId());
-        if ( company != null) {
-            //不能重复完善信息
-            if (company.getStatus() == 0) {
-                return "redirect:/";
-            }
-        }
-        return "company/auth";
+        modelAndView.addObject("companyAuth", company == null ? 0 : 1);
+        return modelAndView;
     }
 
     @PostMapping("/doAuth")
@@ -63,7 +60,7 @@ public class CompanyController {
         int result = companyMapper.insert(company);
         if (result > 0) {
             return Response.success(company);
-        }else {
+        } else {
             return Response.error("企业信息完善异常,请刷新浏览器重试");
         }
 
