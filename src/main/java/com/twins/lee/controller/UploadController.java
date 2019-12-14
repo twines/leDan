@@ -18,11 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.io.*;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +34,56 @@ public class UploadController {
     @Value("${twins.uploadFolder}")
     private String docLocation;
 
+    public static List<String> executeLinuxCmd(String cmd) {
+        Runtime run = Runtime.getRuntime();
+        try {
+//            Process process = run.exec(cmd);
+            Process process = run.exec(new String[]{"/bin/sh", "-c", cmd});
+            InputStream in = process.getInputStream();
+            BufferedReader bs = new BufferedReader(new InputStreamReader(in));
+            List<String> list = new ArrayList<String>();
+            String result = null;
+            while ((result = bs.readLine()) != null) {
+                list.add(result);
+            }
+            in.close();
+            process.waitFor();
+            process.destroy();
+            return list;
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String factory(String pngPath, String resultPath) {
+        String commad = "tesseract " + pngPath + " " + resultPath + " -l chi_sim";
+        List<String> result = executeLinuxCmd(commad);
+        StringBuffer stringBuffer = new StringBuffer();
+        /* 读取数据 */
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(resultPath + ".txt")),
+                    "UTF-8"));
+            String lineTxt = null;
+            while ((lineTxt = br.readLine()) != null) {//数据以逗号分隔
+                stringBuffer.append(lineTxt);
+
+            }
+            br.close();
+        } catch (Exception e) {
+            System.err.println("read errors :" + e);
+        }
+        return stringBuffer.toString();
+    }
+
+    @RequestMapping("/test")
+    @ResponseBody
+    public Object test() {
+        Date date = new Date();
+        String result = factory("/root/8dea492c-5fac-4653-9f81-e6c108a22f4b.jpg", "/root/resut" + date.getTime());
+//        String result = factory("~/Desktop/171575595790_.pic_hd.png", "/Users/liyulong/resut" + date.getTime());
+        return result;
+    }
 
     @RequestMapping("/upload")
     @ResponseBody
