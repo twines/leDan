@@ -5,9 +5,6 @@ import com.twins.lee.entity.Resource;
 import com.twins.lee.mapper.ResourceMapper;
 import com.twins.lee.response.Response;
 import com.twins.lee.utilites.Utility;
-import net.sourceforge.tess4j.ITesseract;
-import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.TesseractException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -180,11 +177,12 @@ public class UploadController {
                 if (!Utility.isWindows()) {
                     String nameValue = null;
                     String idValue = null;
-                    Pattern namePattern = Pattern.compile("名[^\\\\x00-\\\\xff]{2,3}");
+                    Pattern namePattern = Pattern.compile("名[^\\\\x00-\\\\xff]{2,4}");
                     Matcher nameMatcher = namePattern.matcher(ocrSource);
                     if (nameMatcher.find()) {
                         nameValue = nameMatcher.group();
                         nameValue = nameValue.replace("名", "");
+                       nameValue = nameValue.replace(" ", "");
                     }
                     Pattern idPattern = Pattern.compile("\\d{17}[\\d|x]|\\d{15}");
                     Matcher idMatcher = idPattern.matcher(ocrSource);
@@ -241,19 +239,22 @@ public class UploadController {
         if (docLocation != null) {
             destPath = docLocation + imgPath;
         }
-        File imageFile = new File(destPath);
-        ITesseract instance = new Tesseract();
-        instance.setDatapath(tranPath);
-        instance.setLanguage("chi_sim");
-//        instance.setLanguage("eng");
-
-        try {
-            String result = instance.doOCR(imageFile).replace(" ", "");
-
-            return result;
-        } catch (TesseractException e) {
-            return null;
-        }
+        Date date = new Date();
+        String result = factory(destPath, this.docLocation+"/ocr/"+imgPath.split("/")[0]+"@" + date.getTime());
+        return result;
+//        File imageFile = new File(destPath);
+//        ITesseract instance = new Tesseract();
+//        instance.setDatapath(tranPath);
+//        instance.setLanguage("chi_sim");
+////        instance.setLanguage("eng");
+//
+//        try {
+//            String result = instance.doOCR(imageFile).replace(" ", "");
+//
+//            return result;
+//        } catch (TesseractException e) {
+//            return null;
+//        }
     }
 
     private String fileDestPath() {
