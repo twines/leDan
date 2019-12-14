@@ -24,7 +24,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">社会统一信用代码</label>
                     <div class="layui-input-block">
-                        <input type="text" name="creditCode" id="creditCode" lay-verify="required" autocomplete="off"
+                        <input type="text" name="creditCode" id="creditCode" lay-verify="creditCode" autocomplete="off"
                                placeholder="上传识别后可以手动编辑"
                                disabled
                                class="layui-input">
@@ -33,7 +33,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">法人姓名</label>
                     <div class="layui-input-block">
-                        <input type="text" name="userName" id="userName" lay-verify="required" placeholder="上传识别后可以手动编辑"
+                        <input type="text" name="userName" id="userName" lay-verify="userName" placeholder="上传识别后可以手动编辑"
                                disabled
                                autocomplete="off"
                                class="layui-input">
@@ -43,7 +43,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">法人身份证号</label>
                     <div class="layui-input-block">
-                        <input type="text" name="idNumber" id="idNumber" lay-verify="required" placeholder="上传识别后可以手动编辑"
+                        <input type="text" name="idNumber" id="idNumber" lay-verify="idNumber" placeholder="上传识别后可以手动编辑"
                                disabled
                                autocomplete="off"
                                class="layui-input">
@@ -52,7 +52,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">企业银行卡号</label>
                     <div class="layui-input-block">
-                        <input type="text" name="bankNumber" lay-verify="required" placeholder="请输入" autocomplete="off"
+                        <input type="text" name="bankNumber" lay-verify="bankNumber" placeholder="请输入"
+                               autocomplete="off"
                                class="layui-input">
                     </div>
                 </div>
@@ -60,7 +61,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">联系电话</label>
                     <div class="layui-input-block">
-                        <input type="text" name="mobile" lay-verify="required" placeholder="请输入" autocomplete="off"
+                        <input type="text" name="mobile" lay-verify="mobile" placeholder="请输入" autocomplete="off"
                                class="layui-input">
                     </div>
                 </div>
@@ -162,6 +163,8 @@
             elem: '#LAY-component-form-group-date'
         });
 
+        var loading = null;
+
 
         var companyAuth = [[${companyAuth}]];
         if (companyAuth) {
@@ -179,9 +182,30 @@
                     return '标题至少得5个字符啊';
                 }
             }
-            , pass: [/(.+){6,12}$/, '密码必须6到12位']
-            , content: function (value) {
-                layedit.sync(editIndex);
+            , creditCode: function (val) {
+                if (val.length <= 0) {
+                    return '社会统一信用代码不可以为空';
+                }
+            }
+            , userName: function (val) {
+                if (val.length <= 0) {
+                    return '法人姓名不可以为空';
+                }
+            }
+            , idNumber: function (val) {
+                if (val.length <= 0) {
+                    return '法人身份证号不可以为空';
+                }
+            }
+            , bankNumber: function (val) {
+                if (val.length <= 0) {
+                    return '企业银行卡号不可以为空';
+                }
+            }
+            , mobile: function (val) {
+                if (val.length <= 0) {
+                    return '联系电话不可以为空';
+                }
             }
         });
         var cardA, cardB, businessLicense, assetProof = [];
@@ -205,7 +229,22 @@
             //
             // });
 
-            console.log(data.field);
+            if (cardA === undefined) {
+                layer.msg('请上传身份证正面', {icon: 5});
+                return false;
+            }
+            if (cardB === undefined) {
+                layer.msg('请上传身份证反面', {icon: 5});
+                return false;
+            }
+            if (businessLicense === undefined) {
+                layer.msg('请上传营业执照', {icon: 5});
+                return false;
+            }
+            if (assetProof.length <= 0) {
+                layer.msg('请上传完善企业资产证明\n', {icon: 5});
+                return false;
+            }
             $.ajax({
                 method: 'post',
                 url: '/company/doAuth',
@@ -235,14 +274,19 @@
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
                 obj.preview(function (index, file, result) {
                     $('#cardAImg').html('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
             }
             , done: function (res) {
                 //上传完毕
-
-
+                layer.close(loading);
                 cardA = res.data.value;
                 if (res.code == 1) {
                     layer.alert('请上传正确的身份证照片')
@@ -266,12 +310,19 @@
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
                 obj.preview(function (index, file, result) {
                     $('#cardBImg').html('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
             }
             , done: function (res) {
                 //上传完毕
+                layer.close(loading)
                 cardB = res.data.value;
             }
         });
@@ -281,12 +332,21 @@
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
+
                 obj.preview(function (index, file, result) {
                     $('#businessLicenseImages').html('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
             }
             , done: function (res) {
                 //上传完毕
+                layer.close(loading);
+
                 businessLicense = res.data.value;
                 var license = res.data.extract.ocrResult.license;
                 var representativeName = res.data.extract.ocrResult.representativeName;
@@ -303,12 +363,22 @@
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
+
+
                 obj.preview(function (index, file, result) {
                     $('#proofImg').append('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
             }
             , done: function (res) {
                 //上传完毕
+                layer.close(loading)
                 assetProof.push(res.data.value);
             }
         });
