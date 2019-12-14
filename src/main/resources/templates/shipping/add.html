@@ -168,10 +168,6 @@
             data.field.logisticsBill = logisticsBill;
             data.field.insuranceBill = insuranceBill;
             data.field.tradeBill = tradeBill;
-            layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-
-            });
             $.ajax({
                 method: 'post',
                 url: '/shipping/add',
