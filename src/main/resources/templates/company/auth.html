@@ -31,6 +31,7 @@
                     <label class="layui-form-label">法人姓名</label>
                     <div class="layui-input-block">
                         <input type="text" name="userName" id="userName" lay-verify="required" placeholder="请输入"
+                               disabled
                                autocomplete="off"
                                class="layui-input">
                     </div>
@@ -40,6 +41,7 @@
                     <label class="layui-form-label">法人身份证号</label>
                     <div class="layui-input-block">
                         <input type="text" name="idNumber" id="idNumber" lay-verify="required" placeholder="请输入"
+                               disabled
                                autocomplete="off"
                                class="layui-input">
                     </div>
@@ -234,14 +236,15 @@
                     return;
                 }
                 //识别错误怎么判断
-                var idNumber = $('#idNumber').val();
-                var userName = $('#userName').val();
-                if (res.data.extract.ocrResult.name != userName) {
-                    layer.alert('法人姓名不匹配');
-                }
-                if (res.data.extract.ocrResult.id != idNumber) {
-                    layer.alert('法人身份证号不匹配');
-                }
+                var idNumber = $('#idNumber').val(res.data.extract.ocrResult.id);
+                var userName = $('#userName').val(res.data.extract.ocrResult.name);
+                $("#idNumber,#userName").removeAttr("disabled");
+                // if (res.data.extract.ocrResult.name != userName) {
+                //     layer.alert('法人姓名不匹配');
+                // }
+                // if (res.data.extract.ocrResult.id != idNumber) {
+                //     layer.alert('法人身份证号不匹配');
+                // }
             }
         });
         upload.render({
