@@ -298,7 +298,7 @@
                 var idNumber = $('#idNumber').val(res.data.extract.ocrResult.id);
                 var userName = $('#userName').val(res.data.extract.ocrResult.name);
                 $("#idNumber,#userName").removeAttr("disabled");
-                $('#idNumberBlock,#userNameBlock').removeClass('layui-hide');
+                $('#idNumberBlock').removeClass('layui-hide');
                 // if (res.data.extract.ocrResult.name != userName) {
                 //     layer.alert('法人姓名不匹配');
                 // }
@@ -353,12 +353,17 @@
                 businessLicense = res.data.value;
                 var license = res.data.extract.ocrResult.license;
                 var representativeName = res.data.extract.ocrResult.representativeName;
+                var userName = $('#userName').val();
+                if (userName === '') {
+                    layer.alert('请先上传身份证正面');
+                    return;
+                }
                 if (representativeName != $('#userName').val()) {
                     layer.alert('身份证姓名和法人姓名不一致');
                 }
                 $('#creditCode').removeAttr('disabled');
                 $('#creditCode').val(license);
-                $('#creditCodeBlock').removeClass('layui-hide');
+                $('#creditCodeBlock,#userNameBlock').removeClass('layui-hide');
             }
         });
         upload.render({
