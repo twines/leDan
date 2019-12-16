@@ -31,11 +31,10 @@ echo "pull update code"
 git pull
 #项目web下打包
 mvn clean package -P pro
-read -t 60 -p "请输入需要结束的端口:" version
-#移动到~
-mv target/lee-${version}-SNAPSHOT.war ~/lee-${version}-SNAPSHOT.war
+ #移动到~
+mv target/lee-0.0.1-SNAPSHOT.war ~/lee-0.0.1-SNAPSHOT.war
 #    运行
-nohup java -jar ~/lee-${version}-SNAPSHOT.war &
+nohup java -jar ~/lee-0.0.1-SNAPSHOT.war &
 fi
 
 
