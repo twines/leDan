@@ -20,6 +20,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.twins.lee.utilites.Utility.factory;
+
 
 //@SessionAttributes(value={"CURR_USER"},types={User.class})
 @Controller
@@ -31,47 +33,6 @@ public class UploadController {
     @Value("${twins.uploadFolder}")
     private String docLocation;
 
-    public static List<String> executeLinuxCmd(String cmd) {
-        Runtime run = Runtime.getRuntime();
-        try {
-//            Process process = run.exec(cmd);
-            Process process = run.exec(new String[]{"/bin/sh", "-c", cmd});
-            InputStream in = process.getInputStream();
-            BufferedReader bs = new BufferedReader(new InputStreamReader(in));
-            List<String> list = new ArrayList<String>();
-            String result = null;
-            while ((result = bs.readLine()) != null) {
-                list.add(result);
-            }
-            in.close();
-            process.waitFor();
-            process.destroy();
-            return list;
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static String factory(String pngPath, String resultPath) {
-        String commad = "tesseract " + pngPath + " " + resultPath + " -l chi_sim";
-        List<String> result = executeLinuxCmd(commad);
-        StringBuffer stringBuffer = new StringBuffer();
-        /* 读取数据 */
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(resultPath + ".txt")),
-                    "UTF-8"));
-            String lineTxt = null;
-            while ((lineTxt = br.readLine()) != null) {//数据以逗号分隔
-                stringBuffer.append(lineTxt);
-
-            }
-            br.close();
-        } catch (Exception e) {
-            System.err.println("read errors :" + e);
-        }
-        return stringBuffer.toString();
-    }
 
     @RequestMapping("/test")
     @ResponseBody
@@ -185,7 +146,7 @@ public class UploadController {
                        nameValue = nameValue.replace(" ", "");
                     }
                     Pattern idPattern = Pattern.compile("\\d{17}[\\d|x]|\\d{15}");
-                    Matcher idMatcher = idPattern.matcher(ocrSource);
+                    Matcher idMatcher = idPattern.matcher(ocrSource.replace("”",""));
                     if (idMatcher.find()) {
                         idValue = idMatcher.group();
                     }

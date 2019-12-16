@@ -10,9 +10,7 @@ import org.apache.shiro.subject.Subject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +83,49 @@ public class Utility {
             return false;
         }
     }
+
+    public static List<String> executeLinuxCmd(String cmd) {
+        Runtime run = Runtime.getRuntime();
+        try {
+//            Process process = run.exec(cmd);
+            Process process = run.exec(new String[]{"/bin/sh", "-c", cmd});
+            InputStream in = process.getInputStream();
+            BufferedReader bs = new BufferedReader(new InputStreamReader(in));
+            List<String> list = new ArrayList<String>();
+            String result = null;
+            while ((result = bs.readLine()) != null) {
+                list.add(result);
+            }
+            in.close();
+            process.waitFor();
+            process.destroy();
+            return list;
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String factory(String pngPath, String resultPath) {
+        String commad = "tesseract " + pngPath + " " + resultPath + " -l chi_sim";
+        List<String> result = executeLinuxCmd(commad);
+        StringBuffer stringBuffer = new StringBuffer();
+        /* 读取数据 */
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(resultPath + ".txt")),
+                    "UTF-8"));
+            String lineTxt = null;
+            while ((lineTxt = br.readLine()) != null) {//数据以逗号分隔
+                stringBuffer.append(lineTxt);
+
+            }
+            br.close();
+        } catch (Exception e) {
+            System.err.println("read errors :" + e);
+        }
+        return stringBuffer.toString();
+    }
+
 
     /**
      * OCR 通过文件绝对地址和OCR库在Resources资源中的绝对地址识别出问题
