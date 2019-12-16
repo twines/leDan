@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
     <meta charset="utf-8">
     <title>申请货贷</title>
@@ -129,6 +130,20 @@
             , form = layui.form;
 
         form.render(null, 'component-form-group');
+
+        // parent.layui.admin.events.closeThisTabs();
+
+        // top.layui.index.openTabsPage('/company/auth', '完善企业信息');
+
+        var companyAuth = [[${companyAuth}]];
+        if (!companyAuth) {
+            window.onfocus = function (ev) {
+                parent.layui.admin.events.refresh();
+            };
+            top.layui.index.openTabsPage('/company/auth', '完善企业信息');
+            layer.msg('请先完善企业信息');
+        }
+
 
         laydate.render({
             elem: '#LAY-component-form-group-date'
