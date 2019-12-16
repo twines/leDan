@@ -128,6 +128,24 @@
                 </div>
 
 
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">验证手机</label>
+                        <div class="layui-input-inline">
+                            <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <button class="layui-btn">发送验证码</button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
                 <div class="layui-form-item ">
                     <div class="layui-input-block">
                         <div class="layui-footer" style="left: 0;">
@@ -298,7 +316,7 @@
                 var idNumber = $('#idNumber').val(res.data.extract.ocrResult.id);
                 var userName = $('#userName').val(res.data.extract.ocrResult.name);
                 $("#idNumber,#userName").removeAttr("disabled");
-                $('#idNumberBlock,#userNameBlock').removeClass('layui-hide');
+                $('#idNumberBlock').removeClass('layui-hide');
                 // if (res.data.extract.ocrResult.name != userName) {
                 //     layer.alert('法人姓名不匹配');
                 // }
@@ -353,12 +371,17 @@
                 businessLicense = res.data.value;
                 var license = res.data.extract.ocrResult.license;
                 var representativeName = res.data.extract.ocrResult.representativeName;
+                var userName = $('#userName').val();
+                if (userName === '') {
+                    layer.alert('请先上传身份证正面');
+                    return;
+                }
                 if (representativeName != $('#userName').val()) {
                     layer.alert('身份证姓名和法人姓名不一致');
                 }
                 $('#creditCode').removeAttr('disabled');
                 $('#creditCode').val(license);
-                $('#creditCodeBlock').removeClass('layui-hide');
+                $('#creditCodeBlock,#userNameBlock').removeClass('layui-hide');
             }
         });
         upload.render({
