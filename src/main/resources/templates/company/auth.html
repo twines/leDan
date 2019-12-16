@@ -22,51 +22,6 @@
         <div class="layui-card-body" style="padding: 15px;">
             <form class="layui-form" action="" lay-filter="component-form-group">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">社会统一信用代码</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="creditCode" id="creditCode" lay-verify="creditCode" autocomplete="off"
-                               placeholder="上传识别后可以手动编辑"
-                               disabled
-                               class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">法人姓名</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="userName" id="userName" lay-verify="userName" placeholder="上传识别后可以手动编辑"
-                               disabled
-                               autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">法人身份证号</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="idNumber" id="idNumber" lay-verify="idNumber" placeholder="上传识别后可以手动编辑"
-                               disabled
-                               autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">企业银行卡号</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="bankNumber" lay-verify="bankNumber" placeholder="请输入"
-                               autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">联系电话</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="mobile" lay-verify="mobile" placeholder="请输入" autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
                     <label class="layui-form-label">身份证正面</label>
                     <div class="layui-input-block">
                         <div class="layui-upload">
@@ -125,6 +80,53 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="layui-form-item  layui-hide" id="creditCodeBlock">
+                    <label class="layui-form-label">社会统一信用代码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="creditCode" id="creditCode" lay-verify="creditCode" autocomplete="off"
+                               placeholder="上传识别后可以手动编辑"
+                               disabled
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item  layui-hide" id="userNameBlock">
+                    <label class="layui-form-label">法人姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="userName" id="userName" lay-verify="userName" placeholder="上传识别后可以手动编辑"
+                               disabled
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-hide" id="idNumberBlock">
+                    <label class="layui-form-label">法人身份证号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="idNumber" id="idNumber" lay-verify="idNumber" placeholder="上传识别后可以手动编辑"
+                               disabled
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">企业银行卡号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="bankNumber" lay-verify="bankNumber" placeholder="请输入"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">联系电话</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="mobile" lay-verify="mobile" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
 
                 <div class="layui-form-item ">
                     <div class="layui-input-block">
@@ -296,6 +298,7 @@
                 var idNumber = $('#idNumber').val(res.data.extract.ocrResult.id);
                 var userName = $('#userName').val(res.data.extract.ocrResult.name);
                 $("#idNumber,#userName").removeAttr("disabled");
+                $('#idNumberBlock,#userNameBlock').removeClass('layui-hide');
                 // if (res.data.extract.ocrResult.name != userName) {
                 //     layer.alert('法人姓名不匹配');
                 // }
@@ -355,6 +358,7 @@
                 }
                 $('#creditCode').removeAttr('disabled');
                 $('#creditCode').val(license);
+                $('#creditCodeBlock').removeClass('layui-hide');
             }
         });
         upload.render({

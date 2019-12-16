@@ -15,6 +15,7 @@ import com.twins.lee.utilites.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,15 +34,11 @@ public class ShippingController {
     ShippingImageMapper shippingImageMapper;
 
     @GetMapping("add")
-    public String index() {
+    public ModelAndView index() {
+        ModelAndView modelAndView = new ModelAndView("shipping/add");
         Company company = companyMapper.selectByUserId(Utility.userId());
-        if ( company != null) {
-            //不能重复完善信息
-            if (company.getStatus() == 0) {
-                return "redirect:/";
-            }
-        }
-        return "shipping/add";
+        modelAndView.addObject("companyAuth", company == null ? 0 : 1);
+        return modelAndView;
     }
 
     @PostMapping("/add")
