@@ -137,10 +137,9 @@
 
         var companyAuth = [[${companyAuth}]];
         if (!companyAuth) {
-            window.onfocus = function (ev) {
-                parent.layui.admin.events.refresh();
-            };
             top.layui.index.openTabsPage('/company/auth', '完善企业信息');
+            parent.layui.admin.closeTabByUrl('/shipping/add');
+
             layer.msg('请先完善企业信息');
         }
 
