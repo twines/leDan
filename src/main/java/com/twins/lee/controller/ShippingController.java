@@ -15,6 +15,7 @@ import com.twins.lee.utilites.Utility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,15 +34,11 @@ public class ShippingController {
     ShippingImageMapper shippingImageMapper;
 
     @GetMapping("add")
-    public String index() {
+    public ModelAndView index() {
+        ModelAndView modelAndView = new ModelAndView("shipping/add");
         Company company = companyMapper.selectByUserId(Utility.userId());
-        if ( company != null) {
-            //不能重复完善信息
-            if (company.getStatus() == 0) {
-                return "redirect:/";
-            }
-        }
-        return "shipping/add";
+        modelAndView.addObject("companyAuth", company == null ? 0 : 1);
+        return modelAndView;
     }
 
     @PostMapping("/add")
@@ -56,6 +53,18 @@ public class ShippingController {
         Shipping shipping = new Shipping();
         shipping.setUserId(company.getUserId());
         shipping.setType(CompanyTool.LoanOfShipping);
+        if (taxBill.isEmpty()) {
+            return Response.error("请添加税单");
+        }
+        if (entryBill.isEmpty()) {
+            return Response.error("请添加报关单");
+        }
+        if (logisticsBill.isEmpty()) {
+            return Response.error("请添加物流单");
+        }
+        if (tradeBill.isEmpty()) {
+            return Response.error("请添加贸易合同");
+        }
 
         int result = shippingMapper.insert(shipping);
         if (result > 0) {//先创建一个货代id，然后插入数据

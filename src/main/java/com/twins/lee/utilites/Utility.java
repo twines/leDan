@@ -6,6 +6,9 @@ import com.google.zxing.DecodeHintType;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.common.HybridBinarizer;
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.shiro.SecurityUtils;
@@ -13,9 +16,7 @@ import org.apache.shiro.subject.Subject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLDecoder;
 import java.util.*;
 
@@ -65,17 +66,96 @@ public class Utility {
             int pageCount = doc.getNumberOfPages();
             for (int i = 0; i < pageCount; i++) {
 // 方式1,第二个参数是设置缩放比(即像素)
-                BufferedImage image = renderer.renderImageWithDPI(i, 296);
+                BufferedImage image = renderer.renderImageWithDPI(i, 296/2);
 // 方式2,第二个参数是设置缩放比(即像素)
 //                BufferedImage image = renderer.renderImage(i, 5f); //第二个参数越大生成图片分辨率越高，转换时间也就越长
                 imagePath = fileDirectory + "/" + i + ".jpg";
                 ImageIO.write(image, "PNG", new File(imagePath));
                 list.add(imagePath);
             }
+            doc.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public static boolean isWindows() {
+        String plantform = System.getProperty("os.name");
+        if (plantform.toLowerCase().contains("windows")) {
+            // 是windows 不走ocr 直接返回个结果数据
+            return true;
+        } else {
+            // 不是windows 走ocr返回个结果数据
+            return false;
+        }
+    }
+
+    public static List<String> executeLinuxCmd(String cmd) {
+        Runtime run = Runtime.getRuntime();
+        try {
+//            Process process = run.exec(cmd);
+            Process process = run.exec(new String[]{"/bin/sh", "-c", cmd});
+            InputStream in = process.getInputStream();
+            BufferedReader bs = new BufferedReader(new InputStreamReader(in));
+            List<String> list = new ArrayList<String>();
+            String result = null;
+            while ((result = bs.readLine()) != null) {
+                list.add(result);
+            }
+            in.close();
+            process.waitFor();
+            process.destroy();
+            return list;
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String factory(String pngPath, String resultPath) {
+        String commad = "tesseract " + pngPath + " " + resultPath + " -l chi_sim";
+        List<String> result = executeLinuxCmd(commad);
+        StringBuffer stringBuffer = new StringBuffer();
+        /* 读取数据 */
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(resultPath + ".txt")),
+                    "UTF-8"));
+            String lineTxt = null;
+            while ((lineTxt = br.readLine()) != null) {//数据以逗号分隔
+                stringBuffer.append(lineTxt);
+
+            }
+            br.close();
+        } catch (Exception e) {
+            System.err.println("read errors :" + e);
+        }
+        return stringBuffer.toString();
+    }
+
+
+    /**
+     * OCR 通过文件绝对地址和OCR库在Resources资源中的绝对地址识别出问题
+     *
+     * @param destPath 图片本地地址
+     * @param tranPath OCR训练资源库地址
+     * @return 返回OCR识别的文本
+     */
+    public String ocrReco(String destPath, String tranPath) {
+
+        File imageFile = new File(destPath);
+        ITesseract instance = new Tesseract();
+        instance.setDatapath(tranPath);
+        instance.setLanguage("chi_sim");
+//        instance.setLanguage("eng");
+
+        try {
+            String result = instance.doOCR(imageFile).replace(" ", "");
+
+            return result;
+        } catch (TesseractException e) {
+            return null;
+        }
     }
 
     public static void deleteAllFilesOfDir(File path) {
@@ -113,21 +193,23 @@ public class Utility {
 
     public static String qrReco(String filePath) throws IOException, NotFoundException {
         String destPath = filePath;
-        String[] component = destPath.split(".");
+        String[] component = destPath.split("\\.");
         int suffixIndex = component.length - 1;
         String extension = component[suffixIndex];
 
         String result = null;
-        if (extension.toLowerCase() == "pdf") {
-            List<String> paths = pdfToImagePath(String.join("/", Arrays.copyOf(component, component.length - 1)));
+        if (extension.toLowerCase().equals("pdf")) {
+            List<String> paths = pdfToImagePath(filePath);
             for (String path : paths
             ) {
-                String tmpResult = qrResut(path);
-                deleteFile(path);
-                if (tmpResult != null) {
-                    result = tmpResult;
-                    break;
+                if (result == null) {
+                    String tmpResult = qrResut(path);
+                    if (tmpResult != null) {
+                        result = tmpResult;
+                    }
                 }
+                deleteFile(path);
+                
             }
 
         } else {
@@ -155,5 +237,13 @@ public class Utility {
         return resultStr;
     }
 
+    public static boolean isPdf(String filePath) {
+        String destPath = filePath;
+        String[] component = destPath.split("\\.");
+        int suffixIndex = component.length - 1;
+        String extension = component[suffixIndex];
+
+        return extension.toLowerCase().equals("pdf");
+    }
 
 }

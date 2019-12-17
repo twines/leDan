@@ -25,7 +25,7 @@
                     </a>
                 </li>
                 <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <a href="http://www.layui.com/admin/" target="_blank" title="前台">
+                    <a href="/" title="前台">
                         <i class="layui-icon layui-icon-website"></i>
                     </a>
                 </li>
@@ -34,31 +34,8 @@
                         <i class="layui-icon layui-icon-refresh-3"></i>
                     </a>
                 </li>
-                <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search"
-                           layadmin-event="serach" lay-action="template/search.html?keywords=">
-                </li>
             </ul>
             <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
-
-                <li class="layui-nav-item" lay-unselect>
-                    <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
-                        <i class="layui-icon layui-icon-notice"></i>
-
-                        <!-- 如果有新消息，则显示小圆点 -->
-                        <span class="layui-badge-dot"></span>
-                    </a>
-                </li>
-                <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <a href="javascript:;" layadmin-event="theme">
-                        <i class="layui-icon layui-icon-theme"></i>
-                    </a>
-                </li>
-                <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <a href="javascript:;" layadmin-event="note">
-                        <i class="layui-icon layui-icon-note"></i>
-                    </a>
-                </li>
                 <li class="layui-nav-item layui-hide-xs" lay-unselect>
                     <a href="javascript:;" layadmin-event="fullscreen">
                         <i class="layui-icon layui-icon-screen-full"></i>
@@ -74,11 +51,6 @@
                         <hr>
                         <dd layadmin-event="logout" style="text-align: center;"><a>退出</a></dd>
                     </dl>
-                </li>
-
-                <li class="layui-nav-item layui-hide-xs" lay-unselect>
-                    <a href="javascript:;" layadmin-event="about"><i
-                            class="layui-icon layui-icon-more-vertical"></i></a>
                 </li>
                 <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect>
                     <a href="javascript:;" layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
@@ -112,7 +84,7 @@
                             <cite>企业</cite>
                         </a>
                         <dl class="layui-nav-child">
-                            <dd><a lay-href="/auth/list">企业列表</a></dd>
+<!--                            <dd><a lay-href="/auth/list">企业列表</a></dd>-->
                         </dl>
                     </li>
                     <li data-name="app" class="layui-nav-item">
@@ -133,7 +105,7 @@
                         </a>
                         <dl class="layui-nav-child">
                             <dd>
-                                <a layadmin-event="im">结汇记录</a>
+                                <a>结汇记录</a>
                             </dd>
                         </dl>
                     </li>
@@ -144,7 +116,7 @@
                         </a>
                         <dl class="layui-nav-child">
                             <dd>
-                                <a layadmin-event="im">退税记录</a>
+                                <a>退税记录</a>
                             </dd>
                         </dl>
                     </li>

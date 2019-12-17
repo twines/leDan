@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
 <head>
     <meta charset="utf-8">
     <title>完善企业信息</title>
@@ -19,44 +21,6 @@
         <div class="layui-card-header">完善企业信息</div>
         <div class="layui-card-body" style="padding: 15px;">
             <form class="layui-form" action="" lay-filter="component-form-group">
-                <div class="layui-form-item">
-                    <label class="layui-form-label">社会统一信用代码</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="creditCode" lay-verify="required" autocomplete="off" placeholder="请输入标题"
-                               class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">法人姓名</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="userName" lay-verify="required" placeholder="请输入" autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">法人身份证号</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="idNumber" lay-verify="required" placeholder="请输入" autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">企业银行卡号</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="bankNumber" lay-verify="required" placeholder="请输入" autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <label class="layui-form-label">联系电话</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="mobile" lay-verify="required" placeholder="请输入" autocomplete="off"
-                               class="layui-input">
-                    </div>
-                </div>
-
                 <div class="layui-form-item">
                     <label class="layui-form-label">身份证正面</label>
                     <div class="layui-input-block">
@@ -117,6 +81,71 @@
                     </div>
                 </div>
 
+
+                <div class="layui-form-item  layui-hide" id="creditCodeBlock">
+                    <label class="layui-form-label">社会统一信用代码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="creditCode" id="creditCode" lay-verify="creditCode" autocomplete="off"
+                               placeholder="上传识别后可以手动编辑"
+                               disabled
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item  layui-hide" id="userNameBlock">
+                    <label class="layui-form-label">法人姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="userName" id="userName" lay-verify="userName" placeholder="上传识别后可以手动编辑"
+                               disabled
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-hide" id="idNumberBlock">
+                    <label class="layui-form-label">法人身份证号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="idNumber" id="idNumber" lay-verify="idNumber" placeholder="上传识别后可以手动编辑"
+                               disabled
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">企业银行卡号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="bankNumber" lay-verify="bankNumber" placeholder="请输入"
+                               autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">联系电话</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="mobile" lay-verify="mobile" placeholder="请输入" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+
+
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">验证码</label>
+                        <div class="layui-input-inline">
+                            <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <div class="layui-btn">发送验证码</div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
                 <div class="layui-form-item ">
                     <div class="layui-input-block">
                         <div class="layui-footer" style="left: 0;">
@@ -154,6 +183,18 @@
             elem: '#LAY-component-form-group-date'
         });
 
+        var loading = null;
+
+
+        var companyAuth = [[${companyAuth}]];
+        if (companyAuth) {
+            layer.msg('已经提交实名认证,请勿重复操作');
+            setTimeout(function () {
+                parent.layui.admin.events.closeThisTabs();
+            }, 2000)
+        }
+
+
         /* 自定义验证规则 */
         form.verify({
             title: function (value) {
@@ -161,9 +202,30 @@
                     return '标题至少得5个字符啊';
                 }
             }
-            , pass: [/(.+){6,12}$/, '密码必须6到12位']
-            , content: function (value) {
-                layedit.sync(editIndex);
+            , creditCode: function (val) {
+                if (val.length <= 0) {
+                    return '社会统一信用代码不可以为空';
+                }
+            }
+            , userName: function (val) {
+                if (val.length <= 0) {
+                    return '法人姓名不可以为空';
+                }
+            }
+            , idNumber: function (val) {
+                if (val.length <= 0) {
+                    return '法人身份证号不可以为空';
+                }
+            }
+            , bankNumber: function (val) {
+                if (val.length <= 0) {
+                    return '企业银行卡号不可以为空';
+                }
+            }
+            , mobile: function (val) {
+                if (val.length <= 0) {
+                    return '联系电话不可以为空';
+                }
             }
         });
         var cardA, cardB, businessLicense, assetProof = [];
@@ -187,7 +249,22 @@
             //
             // });
 
-            console.log(data.field);
+            if (cardA === undefined) {
+                layer.msg('请上传身份证正面', {icon: 5});
+                return false;
+            }
+            if (cardB === undefined) {
+                layer.msg('请上传身份证反面', {icon: 5});
+                return false;
+            }
+            if (businessLicense === undefined) {
+                layer.msg('请上传营业执照', {icon: 5});
+                return false;
+            }
+            if (assetProof.length <= 0) {
+                layer.msg('请上传完善企业资产证明\n', {icon: 5});
+                return false;
+            }
             $.ajax({
                 method: 'post',
                 url: '/company/doAuth',
@@ -197,6 +274,15 @@
                     //     title: '结果'
                     //
                     // });
+                    if (res.code == 1) {
+                        layer.alert(res.msg);
+                    } else {
+                        layer.msg('提交成功');
+                    }
+
+                    setTimeout(function () {
+                        parent.layui.admin.events.closeThisTabs();
+                    }, 3000)
                 }
             });
             return false;
@@ -204,17 +290,39 @@
 
         upload.render({
             elem: '#cardA'
-            , url: '/file/upload'
+            , url: '/file/upload?needOCR=true&type=1'
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
                 obj.preview(function (index, file, result) {
                     $('#cardAImg').html('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
             }
             , done: function (res) {
                 //上传完毕
+                layer.close(loading);
                 cardA = res.data.value;
+                if (res.code == 1) {
+                    layer.alert('请上传正确的身份证照片')
+                    return;
+                }
+                //识别错误怎么判断
+                var idNumber = $('#idNumber').val(res.data.extract.ocrResult.id);
+                var userName = $('#userName').val(res.data.extract.ocrResult.name);
+                $("#idNumber,#userName").removeAttr("disabled");
+                $('#idNumberBlock').removeClass('layui-hide');
+                // if (res.data.extract.ocrResult.name != userName) {
+                //     layer.alert('法人姓名不匹配');
+                // }
+                // if (res.data.extract.ocrResult.id != idNumber) {
+                //     layer.alert('法人身份证号不匹配');
+                // }
             }
         });
         upload.render({
@@ -223,28 +331,57 @@
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
                 obj.preview(function (index, file, result) {
                     $('#cardBImg').html('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
             }
             , done: function (res) {
                 //上传完毕
+                layer.close(loading)
                 cardB = res.data.value;
             }
         });
         upload.render({
             elem: '#businessLicense'
-            , url: '/file/upload'
+            , url: '/file/upload?needOCR=true&type=2'
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
+
                 obj.preview(function (index, file, result) {
                     $('#businessLicenseImages').html('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
             }
             , done: function (res) {
                 //上传完毕
+                layer.close(loading);
+
                 businessLicense = res.data.value;
+                var license = res.data.extract.ocrResult.license;
+                var representativeName = res.data.extract.ocrResult.representativeName;
+                var userName = $('#userName').val();
+                if (userName === '') {
+                    layer.alert('请先上传身份证正面');
+                    return;
+                }
+                if (representativeName != $('#userName').val()) {
+                    layer.alert('身份证姓名和法人姓名不一致');
+                }
+                $('#creditCode').removeAttr('disabled');
+                $('#creditCode').val(license);
+                $('#creditCodeBlock,#userNameBlock').removeClass('layui-hide');
             }
         });
         upload.render({
@@ -253,12 +390,22 @@
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
+
+
                 obj.preview(function (index, file, result) {
                     $('#proofImg').append('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
             }
             , done: function (res) {
                 //上传完毕
+                layer.close(loading)
                 assetProof.push(res.data.value);
             }
         });

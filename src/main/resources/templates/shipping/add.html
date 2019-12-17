@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
     <meta charset="utf-8">
     <title>申请货贷</title>
@@ -92,7 +93,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label"></label>
                     <div class="layui-input-block">
-                        <input type="checkbox" name="close" value="1" lay-skin="switch" lay-text="同意|不同意">
+                        <input type="checkbox" name="agree" id="agree" value="1" lay-skin="switch" lay-text="同意|不同意">
                         <a href="#">货贷申请协议</a>
                     </div>
                 </div>
@@ -130,23 +131,24 @@
 
         form.render(null, 'component-form-group');
 
+        // parent.layui.admin.events.closeThisTabs();
+
+        // top.layui.index.openTabsPage('/company/auth', '完善企业信息');
+
+        var companyAuth = [[${companyAuth}]];
+        if (!companyAuth) {
+            top.layui.index.openTabsPage('/company/auth', '完善企业信息');
+            parent.layui.admin.closeTabByUrl('/shipping/add');
+
+            layer.msg('请先完善企业信息');
+        }
+
+
         laydate.render({
             elem: '#LAY-component-form-group-date'
         });
 
-        /* 自定义验证规则 */
-        form.verify({
-            title: function (value) {
-                if (value.length < 5) {
-                    return '标题至少得5个字符啊';
-                }
-            }
-            , pass: [/(.+){6,12}$/, '密码必须6到12位']
-            , content: function (value) {
-                layedit.sync(editIndex);
-            }
-        });
-
+        var loading = null;
         /* 监听指定开关 */
         form.on('switch(component-form-switchTest)', function (data) {
             layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
@@ -168,16 +170,54 @@
             data.field.logisticsBill = logisticsBill;
             data.field.insuranceBill = insuranceBill;
             data.field.tradeBill = tradeBill;
-            layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
+            console.log(data.field.agree);
+            if (taxBill.length <= 0) {
+                layer.msg('请上传税单', {icon: 5});
+                return false;
+            }
 
-            });
+            if (entryBill.length <= 0) {
+                layer.msg('请上传报关单', {icon: 5});
+                return false;
+            }
+            if (logisticsBill.length <= 0) {
+                layer.msg('请上传物流单', {icon: 5});
+                return false;
+            }
+            if (logisticsBill.length <= 0) {
+                layer.msg('请上传物流单', {icon: 5});
+                return false;
+            }
+            if (insuranceBill.length <= 0) {
+                layer.msg('请上传保险单', {icon: 5});
+                return false;
+            }
+            if (tradeBill.length <= 0) {
+                layer.msg('请上传贸易合同', {icon: 5});
+                return false;
+            }
+
+            if (data.field.agree === undefined) {
+                layer.msg('您必须同意货贷申请协议', {icon: 5});
+                return false;
+            }
+
+
             $.ajax({
                 method: 'post',
                 url: '/shipping/add',
                 data: data.field,
                 success: function (res) {
                     layer.closeAll();
+                    if (res.code == 1) {
+                        layer.alert(res.msg);
+                    } else {
+                        layer.msg('提交成功');
+                    }
+
+                    setTimeout(function () {
+                        parent.layui.admin.events.closeThisTabs();
+                    }, 3000)
                 }
             });
             return false;
@@ -190,6 +230,12 @@
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
                 obj.preview(function (index, file, result) {
                     $('#taxBillImg').append('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
@@ -197,6 +243,7 @@
             , done: function (res) {
                 //上传完毕
                 taxBill.push(res.data.value);
+                layer.close(loading)
             }
         });
         upload.render({
@@ -205,6 +252,13 @@
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
                 obj.preview(function (index, file, result) {
                     $('#entryBillImg').append('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
@@ -212,6 +266,8 @@
             , done: function (res) {
                 //上传完毕
                 entryBill.push(res.data.value);
+                layer.close(loading)
+
             }
         });
         upload.render({
@@ -220,6 +276,12 @@
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
                 obj.preview(function (index, file, result) {
                     $('#logisticsBillImg').append('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
@@ -227,6 +289,8 @@
             , done: function (res) {
                 //上传完毕
                 logisticsBill.push(res.data.value);
+                layer.close(loading)
+
             }
         });
         upload.render({
@@ -235,6 +299,12 @@
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
                 obj.preview(function (index, file, result) {
                     $('#insuranceBillImg').append('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
@@ -242,6 +312,8 @@
             , done: function (res) {
                 //上传完毕
                 insuranceBill.push(res.data.value);
+                layer.close(loading)
+
             }
         });
         upload.render({
@@ -250,6 +322,12 @@
             , multiple: true
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8
+                loading = layer.load(1, {
+                    shade: [0.1, '#fff']
+                });
+                setTimeout(function () {
+                    layer.close(loading)
+                }, 10000);
                 obj.preview(function (index, file, result) {
                     $('#tradeContractImg').append('<img style="width: 62px;height: 62px;margin-right: 2px" src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
                 });
@@ -257,6 +335,8 @@
             , done: function (res) {
                 //上传完毕
                 tradeBill.push(res.data.value);
+                layer.close(loading)
+
             }
         });
     });
