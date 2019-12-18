@@ -18,4 +18,5 @@ public class CompanyTool {
 
     public static final int OcrTypeOfCardA = 1;//身份证识别
     public static final int OcrTypeOfLicense = 2;//营业执照
+    public static final int OcrTypeOfCustomsBill = 3;//报关单
 }

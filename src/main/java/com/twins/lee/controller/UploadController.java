@@ -48,6 +48,7 @@ public class UploadController {
     @ResponseBody
     public Map upload(@RequestParam("file") MultipartFile file, HttpSession session,
                       @RequestParam(value = "needOCR", required = false, defaultValue = "false") boolean needOcr,
+                      @RequestParam(value = "needQR", required = false, defaultValue = "false") boolean needQR,
                       @RequestParam(value = "type", required = false, defaultValue = "0") int type) {
 
         String sessionId = session.getId();
@@ -86,12 +87,30 @@ public class UploadController {
             Map result = null;
             Map extract = null;
             if (needOcr && type > 0) {
-                extract = new HashMap();
-                String ocrResult = ocrReco(fileUrl);
-                resource.setOcr(ocrResult);
-                extract.put("type", type);
-                extract.put("ocrResult", regexOcrResult(type, ocrResult));
+                if (Utility.isPdf(filePath)) {//PDF则不需要识别出OCR数据啦
 
+                } else {
+                    extract = new HashMap();
+                    String ocrResult = ocrReco(fileUrl);
+                    resource.setOcr(ocrResult);
+                    extract.put("type", type);
+
+                    extract.put("ocrResult", regexOcrResult(type, ocrResult));
+                }
+            }
+
+
+            //识别文件中的二维码
+            if (needQR && type > 0) {
+                String qrResult = Utility.qrReco(filePath);
+                if (qrResult == null) {
+                    return Response.error("单据无法识别，请核验之后重新上传");
+                }
+                if (extract == null) {
+                    extract = new HashMap();
+                }
+                resource.setQr(qrResult);
+                extract.put("qrResult", qrResult);
             }
             Map value = new HashMap();
             resource.setUrl(fileUrl);
@@ -144,10 +163,10 @@ public class UploadController {
                     if (nameMatcher.find()) {
                         nameValue = nameMatcher.group();
                         nameValue = nameValue.replace("名", "");
-                       nameValue = nameValue.replace(" ", "");
+                        nameValue = nameValue.replace(" ", "");
                     }
                     Pattern idPattern = Pattern.compile("\\d{17}[\\d|x]|\\d{15}");
-                    Matcher idMatcher = idPattern.matcher(ocrSource.replace("”",""));
+                    Matcher idMatcher = idPattern.matcher(ocrSource.replace("”", ""));
                     if (idMatcher.find()) {
                         idValue = idMatcher.group();
                     }
@@ -190,6 +209,12 @@ public class UploadController {
 
                 return result;
             }
+            case CompanyTool.OcrTypeOfCustomsBill: {
+                //报关单
+                return result;
+
+            }
+
         }
         return null;
     }
@@ -202,7 +227,7 @@ public class UploadController {
             destPath = docLocation + imgPath;
         }
         Date date = new Date();
-        String result = factory(destPath, this.docLocation+"/ocr/"+imgPath.split("/")[0]+"@" + date.getTime());
+        String result = factory(destPath, this.docLocation + "/ocr/" + imgPath.split("/")[0] + "@" + date.getTime());
         return result;
 //        File imageFile = new File(destPath);
 //        ITesseract instance = new Tesseract();
