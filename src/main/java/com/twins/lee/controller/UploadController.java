@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.twins.lee.utilites.Utility.factory;
+import static com.twins.lee.utilites.Utility.md5HashCode32;
 
 
 //@SessionAttributes(value={"CURR_USER"},types={User.class})
@@ -75,7 +76,6 @@ public class UploadController {
             String fileUrl = "/" + userDir + "/" + fileName;
             filePath = filePath + fileUrl;
             File dest = new File(filePath);
-
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();
@@ -85,7 +85,7 @@ public class UploadController {
 
             Resource resource = new Resource();
             Map result = null;
-            Map extract = null;
+            Map extract = new HashMap();
             if (needOcr && type > 0) {
                 if (Utility.isPdf(filePath)) {//PDF则不需要识别出OCR数据啦
 
@@ -114,14 +114,20 @@ public class UploadController {
             }
             Map value = new HashMap();
             resource.setUrl(fileUrl);
+            resource.setResourceDigest(md5HashCode32( docLocation + fileUrl));
 
+
+            //数据库操作
             resourceMapper.insert(resource);
+
 
             value.put("value", resource.getResourceUri());
 
             if (extract != null) {
                 value.put("extract", extract);
             }
+            extract.put("resourceDigest", resource.getResourceDigest());
+
             return result = Response.success(value);
         } catch (Exception e) {
             return Response.error("系统错误:" + e.getLocalizedMessage());

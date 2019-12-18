@@ -1,5 +1,6 @@
 package com.twins.lee.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -14,6 +15,9 @@ public class Resource {
     private String ocr;
     private String qr;
     private int type;
+
+    @TableField("resource_digest")
+    private String resourceDigest;
 
     public String getResourceUri() {
         return this.url + "@" + id;
