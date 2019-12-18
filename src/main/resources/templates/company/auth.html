@@ -372,12 +372,12 @@
                 var license = res.data.extract.ocrResult.license;
                 var representativeName = res.data.extract.ocrResult.representativeName;
                 var userName = $('#userName').val();
-                if (userName === '') {
-                    layer.alert('请先上传身份证正面');
-                    return;
-                }
+                // if (userName === '') {
+                //     layer.alert('请先上传身份证正面');
+                //     return;
+                // }
                 if (representativeName != $('#userName').val()) {
-                    layer.alert('身份证姓名和法人姓名不一致');
+                    layer.alert('请先上传身份证信息或者身份证姓名和法人姓名不一致');
                 }
                 $('#creditCode').removeAttr('disabled');
                 $('#creditCode').val(license);
