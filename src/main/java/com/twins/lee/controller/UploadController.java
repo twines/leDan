@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.twins.lee.utilites.Utility.factory;
+import static com.twins.lee.utilites.Utility.md5HashCode32;
 
 
 //@SessionAttributes(value={"CURR_USER"},types={User.class})
@@ -74,7 +75,6 @@ public class UploadController {
             String fileUrl = "/" + userDir + "/" + fileName;
             filePath = filePath + fileUrl;
             File dest = new File(filePath);
-
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
                 dest.getParentFile().mkdirs();
@@ -95,6 +95,7 @@ public class UploadController {
             }
             Map value = new HashMap();
             resource.setUrl(fileUrl);
+            resource.setResourceDigest(md5HashCode32( docLocation + fileUrl));
 
             resourceMapper.insert(resource);
 
