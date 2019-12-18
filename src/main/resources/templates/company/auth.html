@@ -128,12 +128,12 @@
                 </div>
 
 
-
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">验证码</label>
                         <div class="layui-input-inline">
-                            <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                            <input type="tel" name="code" id="code" lay-verify="code" autocomplete="off"
+                                   class="layui-input">
                         </div>
                     </div>
                     <div class="layui-inline">
@@ -142,8 +142,6 @@
                         </div>
                     </div>
                 </div>
-
-
 
 
                 <div class="layui-form-item ">
@@ -225,6 +223,11 @@
             , mobile: function (val) {
                 if (val.length <= 0) {
                     return '联系电话不可以为空';
+                }
+            }
+            , code: function (val) {
+                if (val.length <= 0) {
+                    return '验证码不可以为空';
                 }
             }
         });
