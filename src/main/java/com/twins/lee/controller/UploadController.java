@@ -85,7 +85,7 @@ public class UploadController {
 
             Resource resource = new Resource();
             Map result = null;
-            Map extract = null;
+            Map extract = new HashMap();
             if (needOcr && type > 0) {
                 if (Utility.isPdf(filePath)) {//PDF则不需要识别出OCR数据啦
 
@@ -116,13 +116,18 @@ public class UploadController {
             resource.setUrl(fileUrl);
             resource.setResourceDigest(md5HashCode32( docLocation + fileUrl));
 
+
+            //数据库操作
             resourceMapper.insert(resource);
+
 
             value.put("value", resource.getResourceUri());
 
             if (extract != null) {
                 value.put("extract", extract);
             }
+            extract.put("resourceDigest", resource.getResourceDigest());
+
             return result = Response.success(value);
         } catch (Exception e) {
             return Response.error("系统错误:" + e.getLocalizedMessage());
