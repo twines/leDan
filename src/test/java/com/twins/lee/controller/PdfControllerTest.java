@@ -1,19 +1,14 @@
 package com.twins.lee.controller;
 
+import com.twins.lee.utilites.Utility;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.apache.pdfbox.io.RandomAccessBuffer;
-import org.apache.pdfbox.pdfparser.PDFParser;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 
 
 /**
@@ -25,6 +20,10 @@ class PdfControllerTest {
 
     @Test
     void index() throws IOException {
+        if (!Utility.isWindows()) {
+            return;
+        }
+        
         File pdfFile = new File("F:\\java\\leDan\\src\\test\\java\\com\\twins\\lee\\controller\\测试.pdf");
         PDDocument document = null;
 
