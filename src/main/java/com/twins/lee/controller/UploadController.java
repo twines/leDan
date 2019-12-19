@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -155,6 +159,15 @@ public class UploadController {
 //    }
 //
     private Object regexOcrResult(int type, String ocrSource) {
+
+        Pattern clearPattern = Pattern.compile("[\\u4E00-\\u9FFF\\da-zA-Z]+");
+        Matcher clearMatcher = clearPattern.matcher(ocrSource);
+        StringBuffer clearResult = new StringBuffer();
+        while (clearMatcher.find()) {
+            String tmp = clearMatcher.group();
+            clearResult.append(tmp);
+        }
+        ocrSource = clearResult.toString();
         Map result = new HashMap();
         result.put("ocrValue", ocrSource);
 
@@ -163,12 +176,12 @@ public class UploadController {
                 if (!Utility.isWindows()) {
                     String nameValue = null;
                     String idValue = null;
-                    Pattern namePattern = Pattern.compile("名[^\\\\x00-\\\\xff]{2,4}");
+                    Pattern namePattern = Pattern.compile("姓名[\\u4E00-\\u9FFF\\da-zA-Z]{2,4}性");
                     Matcher nameMatcher = namePattern.matcher(ocrSource);
                     if (nameMatcher.find()) {
                         nameValue = nameMatcher.group();
-                        nameValue = nameValue.replace("名", "");
-                        nameValue = nameValue.replace(" ", "");
+                        nameValue = nameValue.replace("姓名", "");
+                        nameValue = nameValue.replace("性", "");
                     }
                     Pattern idPattern = Pattern.compile("\\d{17}[\\d|x]|\\d{15}");
                     Matcher idMatcher = idPattern.matcher(ocrSource.replace("”", ""));
