@@ -32,7 +32,7 @@ git pull
 #项目web下打包
 mvn clean package -P pro
  #移动到~
-mv ~/leDantarget/lee-0.0.1-SNAPSHOT.war ~/lee-0.0.1-SNAPSHOT.war
+mv target/lee-0.0.1-SNAPSHOT.war ~/lee-0.0.1-SNAPSHOT.war
 #    运行
 nohup java -jar ~/lee-0.0.1-SNAPSHOT.war &
 fi
